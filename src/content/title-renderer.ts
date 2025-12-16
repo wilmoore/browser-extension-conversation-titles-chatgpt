@@ -3,8 +3,17 @@ import { PlacementLocation } from '../types/index.js';
 import {
   EXTENSION_ELEMENT_ID,
   EXTENSION_CLASS,
+  DISCLAIMER_PATTERNS,
 } from './selectors.js';
 import { formatDisplayText } from './context-extractor.js';
+
+/**
+ * Check if element contains disclaimer text
+ */
+function isDisclaimerElement(element: Element): boolean {
+  const text = element.textContent || '';
+  return DISCLAIMER_PATTERNS.some(pattern => text.includes(pattern));
+}
 
 /**
  * Tooltip text for hover discoverability
@@ -20,12 +29,23 @@ function getExistingElement(): HTMLElement | null {
 }
 
 /**
- * Remove the existing title element
+ * Container ID for fixed position fallback
+ */
+const EXTENSION_CONTAINER_ID = 'conversation-title-ext-container';
+
+/**
+ * Remove the existing title element (and container if present)
  */
 export function removeElement(): void {
   const existing = getExistingElement();
   if (existing) {
     existing.remove();
+  }
+
+  // Also remove the container if it exists
+  const container = document.getElementById(EXTENSION_CONTAINER_ID);
+  if (container) {
+    container.remove();
   }
 }
 
@@ -122,22 +142,33 @@ function renderInTopNav(element: HTMLElement, navElement: Element): boolean {
 }
 
 /**
- * Render element in footer (replacing disclaimer)
+ * Render element in footer (replacing disclaimer or appending to main)
  */
 function renderInFooter(element: HTMLElement, footerElement: Element): boolean {
-  // Hide the original disclaimer text
-  if (footerElement instanceof HTMLElement) {
-    footerElement.style.display = 'none';
+  // Check if this is the actual disclaimer element
+  if (isDisclaimerElement(footerElement)) {
+    // Hide the original disclaimer text
+    if (footerElement instanceof HTMLElement) {
+      footerElement.style.display = 'none';
+    }
+
+    // Insert our element in its place
+    const parent = footerElement.parentElement;
+    if (parent) {
+      parent.insertBefore(element, footerElement);
+      return true;
+    }
   }
 
-  // Insert our element in its place
-  const parent = footerElement.parentElement;
-  if (parent) {
-    parent.insertBefore(element, footerElement);
-    return true;
-  }
+  // Fallback: this is the main content area, append at the bottom
+  // Create a container div for proper positioning
+  const container = document.createElement('div');
+  container.id = EXTENSION_CONTAINER_ID;
+  container.style.cssText = 'text-align: center; padding: 8px 0; position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); z-index: 1000; background: var(--main-surface-primary, white); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+  container.appendChild(element);
 
-  return false;
+  document.body.appendChild(container);
+  return true;
 }
 
 /**

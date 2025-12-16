@@ -2,6 +2,7 @@ import { PlacementLocation, PlacementState } from '../types/index.js';
 import {
   NAV_CENTER_SELECTORS,
   FOOTER_SELECTORS,
+  MAIN_CONTENT_SELECTORS,
   DISCLAIMER_PATTERNS,
   TIMING,
 } from './selectors.js';
@@ -45,38 +46,52 @@ function findNavCenter(): Element | null {
  * Find the footer/disclaimer area
  */
 function findFooter(): Element | null {
-  // First try selectors
+  // First try selectors that contain disclaimer text
   for (const selector of FOOTER_SELECTORS) {
-    const element = safeQuery(selector);
-    if (element && isElementVisible(element)) {
-      // Verify it contains disclaimer text
-      if (containsDisclaimerText(element)) {
-        return element;
+    try {
+      const elements = document.querySelectorAll(selector);
+      for (const element of elements) {
+        if (element && isElementVisible(element) && containsDisclaimerText(element)) {
+          return element;
+        }
       }
+    } catch {
+      // Selector might be invalid, skip
     }
   }
 
-  // Fallback: search by text content
-  const walker = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_TEXT,
-    null
-  );
+  // Second: search all elements for disclaimer text
+  const allElements = document.querySelectorAll('*');
+  for (const element of allElements) {
+    if (element instanceof HTMLElement && isElementVisible(element)) {
+      // Check direct text content (not nested)
+      const directText = Array.from(element.childNodes)
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .map(node => node.textContent || '')
+        .join('');
 
-  let node: Text | null;
-  while ((node = walker.nextNode() as Text | null)) {
-    const text = node.textContent || '';
-    for (const pattern of DISCLAIMER_PATTERNS) {
-      if (text.includes(pattern)) {
-        // Return the parent element
-        const parent = node.parentElement;
-        if (parent && isElementVisible(parent)) {
-          return parent;
+      for (const pattern of DISCLAIMER_PATTERNS) {
+        if (directText.includes(pattern)) {
+          return element;
         }
       }
     }
   }
 
+  // Last resort: return the main content area for appending
+  return findMainContent();
+}
+
+/**
+ * Find the main content area as ultimate fallback
+ */
+function findMainContent(): Element | null {
+  for (const selector of MAIN_CONTENT_SELECTORS) {
+    const element = safeQuery(selector);
+    if (element && isElementVisible(element)) {
+      return element;
+    }
+  }
   return null;
 }
 

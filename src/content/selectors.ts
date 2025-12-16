@@ -71,18 +71,28 @@ export const NAV_CENTER_SELECTORS = [
  * Selectors for the footer area (fallback placement)
  */
 export const FOOTER_SELECTORS = [
-  // Disclaimer text container
+  // Disclaimer text container - various ChatGPT layouts
   '.text-token-text-secondary.text-center',
+  '.text-xs.text-center.text-token-text-secondary',
 
-  // Element after the input form
-  'form + div.text-center',
-  'form ~ div.text-xs',
+  // Text after the composer/input area
+  'form ~ .text-center',
+  'form ~ .text-xs',
 
-  // Bottom of main content
-  'main > div > div:last-child .text-xs',
+  // Bottom section containing disclaimer
+  '[class*="text-center"][class*="text-xs"]',
 
-  // Fallback: find by text content
-  // (handled separately in code)
+  // Main content bottom area
+  'main .text-xs.text-center',
+];
+
+/**
+ * Selector for the main chat area (for appending our element)
+ */
+export const MAIN_CONTENT_SELECTORS = [
+  'main',
+  '#__next main',
+  '[role="main"]',
 ];
 
 /**
