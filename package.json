@@ -1,0 +1,24 @@
+{
+  "name": "conversation-titles-chatgpt",
+  "version": "1.0.0",
+  "description": "A lightweight Chrome extension that displays and copies ChatGPT conversation titles",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0-beta.28",
+    "@types/chrome": "^0.0.280",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  },
+  "keywords": [
+    "chrome-extension",
+    "chatgpt",
+    "conversation-titles"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,3 +1,75 @@
 # Conversation Titles for ChatGPT
 
-A lightweight Chrome extension that displays and copies ChatGPT conversation titles.
+A lightweight Chrome extension that restores missing context in the ChatGPT UI by always displaying the current conversation title and project name, with easy copy functionality using modifier clicks.
+
+## Features
+
+- Always displays the current conversation title
+- Shows project name when conversation belongs to a project
+- Copy in multiple formats with modifier clicks:
+  - **Click**: Copy title only
+  - **Shift + Click**: Copy project name and title
+  - **Cmd/Ctrl + Click**: Copy as Markdown link
+  - **Cmd/Ctrl + Shift + Click**: Copy raw URL
+
+## Installation
+
+### From Source (Development)
+
+1. Clone this repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Build the extension:
+   ```bash
+   npm run build
+   ```
+4. Load the extension in Chrome:
+   - Open `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `dist` folder
+
+### From Chrome Web Store
+
+Coming soon.
+
+## Usage
+
+Once installed, the extension automatically displays the conversation title:
+
+- **Primary location**: Top-center navigation bar (when available)
+- **Fallback location**: Footer area (replaces disclaimer text)
+
+Hover over the title to see copy instructions. Click with modifier keys to copy in different formats.
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build for production
+npm run build
+
+# Development mode with hot reload
+npm run dev
+```
+
+## Supported Domains
+
+- `chatgpt.com`
+- `chat.openai.com`
+
+## Privacy
+
+This extension:
+- Does not collect any user data
+- Does not make any network requests
+- Only requires clipboard write permission for copy functionality
+- Operates entirely client-side
+
+## License
+
+MIT
