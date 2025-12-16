@@ -50,27 +50,29 @@ export const PROJECT_SELECTORS = [
 
 /**
  * Selectors for the top navigation area (primary placement)
+ * These must NOT match the sidebar nav
  */
 export const NAV_CENTER_SELECTORS = [
-  // Main header area
-  'main header',
-  'header[role="banner"]',
+  // Main content header (not sidebar)
+  'main > div > header',
+  'main header:not([aria-label="Chat history"])',
 
-  // Sticky top bar
-  '.sticky.top-0',
-  '[class*="sticky"][class*="top-0"]',
+  // Sticky header in main content area
+  'main .sticky.top-0',
 
-  // Model selector area (adjacent placement)
+  // Model selector button's parent container
   '[data-testid="model-selector"]',
-
-  // Flex container in header for centering
-  'header .flex.items-center.justify-center',
 ];
 
 /**
  * Selectors for the footer area (fallback placement)
  */
 export const FOOTER_SELECTORS = [
+  // Thread bottom container (most specific for ChatGPT)
+  '#thread-bottom-container .text-token-text-secondary',
+  '#thread-bottom-container .text-center',
+  '#thread-bottom-container > div > div',
+
   // Disclaimer text container - various ChatGPT layouts
   '.text-token-text-secondary.text-center',
   '.text-xs.text-center.text-token-text-secondary',

@@ -36,6 +36,15 @@ function findNavCenter(): Element | null {
   for (const selector of NAV_CENTER_SELECTORS) {
     const element = safeQuery(selector);
     if (element && isElementVisible(element)) {
+      // Make sure we're not matching the sidebar
+      const ariaLabel = element.getAttribute('aria-label');
+      if (ariaLabel === 'Chat history') {
+        continue;
+      }
+      // Make sure we're inside main content, not sidebar
+      if (element.closest('nav[aria-label="Chat history"]')) {
+        continue;
+      }
       return element;
     }
   }
@@ -46,7 +55,18 @@ function findNavCenter(): Element | null {
  * Find the footer/disclaimer area
  */
 function findFooter(): Element | null {
-  // First try selectors that contain disclaimer text
+  // Primary approach: Find elements with pointer-events-auto that contain disclaimer
+  const pointerAutoElements = document.querySelectorAll('.pointer-events-auto');
+  for (const element of pointerAutoElements) {
+    if (element instanceof HTMLElement &&
+        isElementVisible(element) &&
+        element.innerText?.includes('ChatGPT can make mistakes')) {
+      // Return the parent element (the styled container)
+      return element.parentElement || element;
+    }
+  }
+
+  // Secondary: Try selectors that contain disclaimer text
   for (const selector of FOOTER_SELECTORS) {
     try {
       const elements = document.querySelectorAll(selector);
@@ -60,20 +80,13 @@ function findFooter(): Element | null {
     }
   }
 
-  // Second: search all elements for disclaimer text
-  const allElements = document.querySelectorAll('*');
+  // Third: search all elements for disclaimer text
+  const allElements = document.querySelectorAll('div, span, p');
   for (const element of allElements) {
     if (element instanceof HTMLElement && isElementVisible(element)) {
-      // Check direct text content (not nested)
-      const directText = Array.from(element.childNodes)
-        .filter(node => node.nodeType === Node.TEXT_NODE)
-        .map(node => node.textContent || '')
-        .join('');
-
-      for (const pattern of DISCLAIMER_PATTERNS) {
-        if (directText.includes(pattern)) {
-          return element;
-        }
+      // Check if this element's direct text contains the disclaimer
+      if (element.innerText === 'ChatGPT can make mistakes. Check important info.') {
+        return element.parentElement || element;
       }
     }
   }
