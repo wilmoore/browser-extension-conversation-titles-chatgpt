@@ -9,7 +9,7 @@
 
 ### 2. Project Name Detection
 - Project detection relies on URL pattern matching
-- DOM selectors for project name may not be accurate until tested on actual project conversations
+- ~~DOM selectors for project name may not be accurate~~ (RESOLVED: Now extracts from URL)
 - Project feature is relatively new to ChatGPT
 
 ### 3. Testing Limitations
@@ -33,12 +33,10 @@
 - Current icons are placeholder (simple "T" on green background)
 - Should be replaced with professional icon design
 
-### 2. Test Coverage
-- No automated tests currently
-- Should add unit tests for:
-  - Context extraction
-  - Copy format functions
-  - Placement state machine
+### ~~2. Test Coverage~~ (RESOLVED)
+- ~~No automated tests currently~~
+- Added 35 unit tests for context extraction
+- Vitest framework with jsdom environment
 
 ### 3. Error Reporting (Optional)
 - Currently fails silently (by design)
@@ -49,10 +47,17 @@
 ### v1.1 Candidates
 - [ ] Delimiter customization in options
 - [ ] Theme-aware styling improvements
-- [ ] Better project name extraction
+- [x] Better project name extraction (DONE: URL-based extraction)
 
 ### v2.0 Candidates
 - [ ] Firefox support
 - [ ] Safari support
-- [ ] Optional visual feedback on copy (brief flash)
+- [x] Optional visual feedback on copy (DONE: green flash + "Copied!" indicator)
+- [x] Optional audio feedback (DONE: configurable in options)
 - [ ] Copy history (local only)
+
+## Related ADRs
+
+- [001. Footer-Only Title Placement](../../../doc/decisions/001-footer-only-title-placement.md)
+- [002. Configurable Copy Shortcuts](../../../doc/decisions/002-configurable-copy-shortcuts.md)
+- [003. Document Title Parsing Strategy](../../../doc/decisions/003-document-title-parsing-strategy.md)
