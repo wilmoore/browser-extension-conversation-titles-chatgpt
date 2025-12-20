@@ -75,7 +75,7 @@ describe('context-extractor', () => {
       expect(getConversationTitle()).toBe(null);
     });
 
-    it('extracts title from "Title - ChatGPT" format', () => {
+    it('extracts title from "Title - ChatGPT" format (non-project)', () => {
       vi.stubGlobal('location', {
         href: 'https://chatgpt.com/c/abc123',
       });
@@ -123,11 +123,11 @@ describe('context-extractor', () => {
       expect(getConversationTitle()).toBe(null);
     });
 
-    it('returns null when title equals project name only', () => {
+    it('returns null when title equals project name only (project conversation)', () => {
       vi.stubGlobal('location', {
         href: 'https://chatgpt.com/g/g-p-abc123-themeeting-fail/c/def456',
       });
-      document.title = 'themeeting fail - ChatGPT';
+      document.title = 'themeeting.fail - ChatGPT';
       expect(getConversationTitle()).toBe(null);
     });
 
@@ -154,6 +154,33 @@ describe('context-extractor', () => {
       document.title = '   ';
       expect(getConversationTitle()).toBe(null);
     });
+
+    // Project conversation: extracts conversation-specific part only
+    it('extracts conversation part only for project conversations (excludes project prefix)', () => {
+      vi.stubGlobal('location', {
+        href: 'https://chatgpt.com/g/g-p-abc123-business-ideas/c/def456',
+      });
+      // Document title format: "ProjectName - ConversationTitle - ChatGPT"
+      document.title = 'Business Ideas - Consulting firms and AI - ChatGPT';
+      expect(getConversationTitle()).toBe('Consulting firms and AI');
+    });
+
+    it('extracts conversation part for domain-style project names', () => {
+      vi.stubGlobal('location', {
+        href: 'https://chatgpt.com/g/g-p-abc123-themeeting-fail/c/def456',
+      });
+      document.title = 'themeeting.fail - UI Design Discussion - ChatGPT';
+      expect(getConversationTitle()).toBe('UI Design Discussion');
+    });
+
+    it('handles conversation titles that contain hyphens', () => {
+      vi.stubGlobal('location', {
+        href: 'https://chatgpt.com/g/g-p-abc123-business-ideas/c/def456',
+      });
+      // Conversation title contains a hyphen
+      document.title = 'Business Ideas - A/B testing - best practices - ChatGPT';
+      expect(getConversationTitle()).toBe('A/B testing - best practices');
+    });
   });
 
   describe('getProjectName', () => {
@@ -161,42 +188,42 @@ describe('context-extractor', () => {
       vi.stubGlobal('location', {
         href: 'https://chatgpt.com/c/abc123',
       });
+      document.title = 'My Conversation - ChatGPT';
       expect(getProjectName()).toBe(null);
     });
 
-    it('extracts project name with dots for domain-like names', () => {
+    // Project name should come from document title (properly cased), not URL slug
+    it('extracts project name from document title (properly cased)', () => {
+      vi.stubGlobal('location', {
+        href: 'https://chatgpt.com/g/g-p-abc123-business-ideas/c/def456',
+      });
+      document.title = 'Business Ideas - Consulting firms and AI - ChatGPT';
+      expect(getProjectName()).toBe('Business Ideas');
+    });
+
+    it('extracts domain-style project name from document title', () => {
       vi.stubGlobal('location', {
         href: 'https://chatgpt.com/g/g-p-abc123-themeeting-fail/c/def456',
       });
+      document.title = 'themeeting.fail - UI Design Discussion - ChatGPT';
       expect(getProjectName()).toBe('themeeting.fail');
     });
 
-    it('extracts project name with dots for .com domains', () => {
-      vi.stubGlobal('location', {
-        href: 'https://chatgpt.com/g/g-p-abc123-example-com/c/def456',
-      });
-      expect(getProjectName()).toBe('example.com');
-    });
-
-    it('extracts project name with dots for .io domains', () => {
-      vi.stubGlobal('location', {
-        href: 'https://chatgpt.com/g/g-p-abc123-myapp-io/c/def456',
-      });
-      expect(getProjectName()).toBe('myapp.io');
-    });
-
-    it('extracts project name with spaces for non-domain names', () => {
+    it('extracts project name with proper casing for multi-word names', () => {
       vi.stubGlobal('location', {
         href: 'https://chatgpt.com/g/g-p-abc123-my-awesome-project/c/def456',
       });
-      expect(getProjectName()).toBe('my awesome project');
+      document.title = 'My Awesome Project - Feature Discussion - ChatGPT';
+      expect(getProjectName()).toBe('My Awesome Project');
     });
 
-    it('handles single-word project names', () => {
+    it('returns null when document title has no conversation part yet', () => {
       vi.stubGlobal('location', {
-        href: 'https://chatgpt.com/g/g-p-abc123-projectname/c/def456',
+        href: 'https://chatgpt.com/g/g-p-abc123-business-ideas/c/def456',
       });
-      expect(getProjectName()).toBe('projectname');
+      // Only project name in title, no conversation title yet
+      document.title = 'Business Ideas - ChatGPT';
+      expect(getProjectName()).toBe(null);
     });
   });
 
@@ -233,11 +260,26 @@ describe('context-extractor', () => {
       });
     });
 
-    it('returns context with project name for project conversations', () => {
+    it('returns context with project name and conversation-specific title for project conversations', () => {
+      vi.stubGlobal('location', {
+        href: 'https://chatgpt.com/g/g-p-abc123-business-ideas/c/def456',
+      });
+      // Document title format: "ProjectName - ConversationTitle - ChatGPT"
+      document.title = 'Business Ideas - Consulting firms and AI - ChatGPT';
+
+      const context = getFullContext();
+      expect(context).toEqual({
+        title: 'Consulting firms and AI', // conversation-specific part only
+        projectName: 'Business Ideas', // from document title (properly cased)
+        url: 'https://chatgpt.com/g/g-p-abc123-business-ideas/c/def456',
+      });
+    });
+
+    it('returns context for domain-style project names', () => {
       vi.stubGlobal('location', {
         href: 'https://chatgpt.com/g/g-p-abc123-themeeting-fail/c/def456',
       });
-      document.title = 'UI Design Discussion - ChatGPT';
+      document.title = 'themeeting.fail - UI Design Discussion - ChatGPT';
 
       const context = getFullContext();
       expect(context).toEqual({
@@ -265,6 +307,16 @@ describe('context-extractor', () => {
         url: 'https://chatgpt.com/c/abc123',
       });
       expect(result).toBe('themeeting.fail – UI Design Discussion');
+    });
+
+    // The locked requirement: display should be "Business Ideas – Consulting firms and AI"
+    it('formats correctly with properly-cased project name', () => {
+      const result = formatDisplayText({
+        title: 'Consulting firms and AI',
+        projectName: 'Business Ideas',
+        url: 'https://chatgpt.com/g/g-p-abc123-business-ideas/c/def456',
+      });
+      expect(result).toBe('Business Ideas – Consulting firms and AI');
     });
   });
 
