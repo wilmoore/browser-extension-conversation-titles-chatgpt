@@ -7,26 +7,21 @@
  * Entry point for the content script.
  */
 
-import type { ConversationContext } from '../types/index.js';
-import { PlacementLocation } from '../types/index.js';
+import type { ConversationContext, CopyPreferences } from '../types/index.js';
 import {
   getFullContext,
   isConversationPage,
   contextEquals,
 } from './context-extractor.js';
-import {
-  updatePlacement,
-  getCurrentPlacement,
-  getTargetElement,
-  setStateChangeCallback,
-  resetPlacement,
-} from './placement-manager.js';
+import { findFooter } from './placement-manager.js';
 import {
   render,
   removeElement,
   getDisplayElement,
+  setTooltipPreferences,
 } from './title-renderer.js';
-import { attachClickHandler } from './copy-handler.js';
+import { attachClickHandler, setPreferences } from './copy-handler.js';
+import { loadPreferences, onPreferencesChange } from '../storage/preferences.js';
 import { TIMING } from './selectors.js';
 
 /**
@@ -60,10 +55,8 @@ let observer: MutationObserver | null = null;
 function renderWithHandler(): void {
   if (!currentContext) return;
 
-  const placement = getCurrentPlacement();
-  const target = getTargetElement();
-
-  const success = render(currentContext, placement, target);
+  const target = findFooter();
+  const success = render(currentContext, target);
 
   if (success) {
     const element = getDisplayElement();
@@ -74,7 +67,7 @@ function renderWithHandler(): void {
 }
 
 /**
- * Full update cycle: extract context, update placement, render
+ * Full update cycle: extract context, find footer, render
  */
 function update(): void {
   // Only show on conversation pages
@@ -84,22 +77,23 @@ function update(): void {
     return;
   }
 
-  // Extract fresh context
+  // Extract fresh context (returns null if no valid title yet)
   const newContext = getFullContext();
+
+  // If no valid context, remove element and restore disclaimer
+  if (newContext === null) {
+    if (currentContext !== null) {
+      removeElement();
+      currentContext = null;
+    }
+    return;
+  }
 
   // Check if context changed
   const contextChanged = !contextEquals(currentContext, newContext);
 
   if (contextChanged) {
     currentContext = newContext;
-  }
-
-  // Update placement state machine
-  updatePlacement();
-
-  // Only re-render if context changed
-  // (placement changes trigger via callback)
-  if (contextChanged) {
     renderWithHandler();
   }
 }
@@ -119,17 +113,6 @@ function debouncedUpdate(): void {
 }
 
 /**
- * Handle placement state changes
- */
-function onPlacementChange(location: PlacementLocation): void {
-  if (location === PlacementLocation.NONE) {
-    removeElement();
-  } else {
-    renderWithHandler();
-  }
-}
-
-/**
  * Check for URL changes (route navigation)
  */
 function checkUrlChange(): void {
@@ -137,9 +120,7 @@ function checkUrlChange(): void {
 
   if (currentUrl !== lastUrl) {
     lastUrl = currentUrl;
-    // Reset placement on navigation
-    resetPlacement();
-    // Full update
+    // Full update on navigation
     update();
   }
 }
@@ -179,6 +160,14 @@ function initUrlPolling(): void {
 }
 
 /**
+ * Handle preference updates
+ */
+function applyPreferences(prefs: CopyPreferences): void {
+  setPreferences(prefs);
+  setTooltipPreferences(prefs);
+}
+
+/**
  * Cleanup on unload
  */
 function cleanup(): void {
@@ -203,9 +192,13 @@ function cleanup(): void {
 /**
  * Main initialization
  */
-function init(): void {
-  // Set up placement state change callback
-  setStateChangeCallback(onPlacementChange);
+async function init(): Promise<void> {
+  // Load and apply preferences
+  const prefs = await loadPreferences();
+  applyPreferences(prefs);
+
+  // Listen for preference changes
+  onPreferencesChange(applyPreferences);
 
   // Initialize observers
   initObserver();

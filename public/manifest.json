@@ -2,15 +2,20 @@
   "manifest_version": 3,
   "name": "Conversation Titles for ChatGPT",
   "version": "1.0.0",
-  "description": "Always see and copy your ChatGPT conversation title. Click for title, Shift for context, Cmd/Ctrl for markdown link.",
+  "description": "Always see and copy your ChatGPT conversation title. Configurable click shortcuts for different copy formats.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
   "permissions": [
-    "clipboardWrite"
+    "clipboardWrite",
+    "storage"
   ],
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": false
+  },
   "content_scripts": [
     {
       "matches": [

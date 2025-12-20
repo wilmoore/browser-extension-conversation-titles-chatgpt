@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversation Titles - Options</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #333;
+      background: #fff;
+      margin: 0;
+      padding: 16px;
+      min-width: 320px;
+    }
+
+    h2 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      color: #111;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .option-row:last-child {
+      border-bottom: none;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .key-combo {
+      font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+      font-size: 12px;
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #666;
+    }
+
+    select {
+      font-size: 13px;
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #10a37f;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .toggle-label {
+      font-size: 13px;
+      color: #333;
+    }
+
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.2s;
+      border-radius: 20px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background-color: #10a37f;
+    }
+
+    .toggle input:checked + .toggle-slider:before {
+      transform: translateX(16px);
+    }
+
+    .status {
+      font-size: 12px;
+      color: #10a37f;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .status.visible {
+      opacity: 1;
+    }
+
+    .footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="section">
+    <h2>Copy Shortcuts</h2>
+
+    <div class="option-row">
+      <div class="option-label">
+        <span class="key-combo">Click</span>
+      </div>
+      <select id="click">
+        <option value="MARKDOWN">Markdown link</option>
+        <option value="TITLE">Title only</option>
+        <option value="FULL_CONTEXT">Full context</option>
+        <option value="URL">URL only</option>
+      </select>
+    </div>
+
+    <div class="option-row">
+      <div class="option-label">
+        <span class="key-combo" id="shift-label">Shift</span>
+      </div>
+      <select id="shiftClick">
+        <option value="FULL_CONTEXT">Full context</option>
+        <option value="MARKDOWN">Markdown link</option>
+        <option value="TITLE">Title only</option>
+        <option value="URL">URL only</option>
+      </select>
+    </div>
+
+    <div class="option-row">
+      <div class="option-label">
+        <span class="key-combo" id="mod-label">Cmd</span>
+      </div>
+      <select id="modClick">
+        <option value="TITLE">Title only</option>
+        <option value="MARKDOWN">Markdown link</option>
+        <option value="FULL_CONTEXT">Full context</option>
+        <option value="URL">URL only</option>
+      </select>
+    </div>
+
+    <div class="option-row">
+      <div class="option-label">
+        <span class="key-combo" id="mod-shift-label">Cmd+Shift</span>
+      </div>
+      <select id="modShiftClick">
+        <option value="URL">URL only</option>
+        <option value="MARKDOWN">Markdown link</option>
+        <option value="TITLE">Title only</option>
+        <option value="FULL_CONTEXT">Full context</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Feedback</h2>
+
+    <div class="toggle-row">
+      <span class="toggle-label">Play sound on copy</span>
+      <label class="toggle">
+        <input type="checkbox" id="audioFeedback">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="status" id="status">Saved</div>
+
+  <div class="footer">
+    Changes apply immediately to all ChatGPT tabs.
+  </div>
+
+  <script type="module" src="./options.ts"></script>
+</body>
+</html>

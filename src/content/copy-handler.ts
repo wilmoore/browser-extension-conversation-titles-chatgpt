@@ -1,22 +1,43 @@
-import type { ConversationContext } from '../types/index.js';
-import { CopyFormat } from '../types/index.js';
+import type { ConversationContext, CopyPreferences } from '../types/index.js';
+import { CopyFormat, DEFAULT_PREFERENCES } from '../types/index.js';
 import { DELIMITER } from './selectors.js';
+import { showCopyFeedback, setAudioEnabled } from './feedback.js';
 
 /**
- * Determine the copy format based on modifier keys
+ * Current preferences (loaded from storage)
+ */
+let currentPrefs: CopyPreferences = DEFAULT_PREFERENCES;
+
+/**
+ * Set preferences (called when loaded or changed)
+ */
+export function setPreferences(prefs: CopyPreferences): void {
+  currentPrefs = prefs;
+  setAudioEnabled(prefs.audioFeedback);
+}
+
+/**
+ * Get current preferences
+ */
+export function getPreferences(): CopyPreferences {
+  return currentPrefs;
+}
+
+/**
+ * Determine the copy format based on modifier keys and preferences
  */
 export function getCopyFormat(event: MouseEvent): CopyFormat {
   const hasModifier = event.metaKey || event.ctrlKey;
   const hasShift = event.shiftKey;
 
   if (hasModifier && hasShift) {
-    return CopyFormat.URL;
+    return currentPrefs.modShiftClick;
   } else if (hasModifier) {
-    return CopyFormat.MARKDOWN;
+    return currentPrefs.modClick;
   } else if (hasShift) {
-    return CopyFormat.FULL_CONTEXT;
+    return currentPrefs.shiftClick;
   } else {
-    return CopyFormat.TITLE;
+    return currentPrefs.click;
   }
 }
 
@@ -95,7 +116,8 @@ export async function copyToClipboard(text: string): Promise<boolean> {
  */
 export async function handleClick(
   event: MouseEvent,
-  context: ConversationContext
+  context: ConversationContext,
+  element: HTMLElement
 ): Promise<boolean> {
   // Prevent default behavior
   event.preventDefault();
@@ -104,7 +126,13 @@ export async function handleClick(
   const format = getCopyFormat(event);
   const text = getFormattedText(context, format);
 
-  return copyToClipboard(text);
+  const success = await copyToClipboard(text);
+
+  if (success) {
+    showCopyFeedback(element);
+  }
+
+  return success;
 }
 
 /**
@@ -137,7 +165,7 @@ export function createClickHandler(
   return async (event: MouseEvent) => {
     const context = extractContextFromElement(element);
     if (context) {
-      await handleClick(event, context);
+      await handleClick(event, context, element);
     }
   };
 }
