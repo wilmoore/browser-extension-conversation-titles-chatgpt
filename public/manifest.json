@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Conversation Titles for ChatGPT",
+  "version": "1.0.0",
+  "description": "Always see and copy your ChatGPT conversation title. Configurable click shortcuts for different copy formats.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "clipboardWrite",
+    "storage"
+  ],
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": ["src/content/index.ts"],
+      "css": ["styles/content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
