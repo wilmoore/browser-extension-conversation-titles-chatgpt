@@ -38,52 +38,67 @@ function getTextContent(element: Element | null): string | null {
 }
 
 /**
- * Extract project slug from URL
- * URL format: https://chatgpt.com/g/g-p-xxx-project-slug/c/xxx
+ * Check if URL indicates a project conversation
  */
-function getProjectSlugFromUrl(): string | null {
+function isProjectUrl(): boolean {
   const url = window.location.href;
-  // Match: /g/g-p-xxxxx-project-name/c/
-  const match = url.match(/\/g\/g-p-[^-]+-([^/]+)\/c\//);
-  if (match && match[1]) {
-    // Convert slug to readable form: "themeeting-fail" -> "themeeting.fail" or "themeeting fail"
-    return match[1].replace(/-/g, ' ').toLowerCase();
-  }
-  return null;
+  return /\/g\/g-p-[^/]+\/c\//.test(url);
 }
 
 /**
- * Normalize text for comparison (lowercase, remove special chars)
+ * Parsed title result for project conversations
  */
-function normalizeForComparison(text: string): string {
-  return text.toLowerCase().replace(/[^a-z0-9]/g, '');
+interface ParsedProjectTitle {
+  projectName: string;
+  conversationTitle: string;
 }
 
 /**
- * Check if a string is just the project name (not a real conversation title)
+ * Parse document title for project conversations
+ * Document title format: "ProjectName - ConversationTitle - ChatGPT"
+ * Returns null if not a valid project conversation title
  */
-function isJustProjectName(text: string, projectSlug: string | null): boolean {
-  if (!projectSlug) return false;
+function parseProjectTitle(): ParsedProjectTitle | null {
+  if (!isProjectUrl()) return null;
 
-  const normalizedText = normalizeForComparison(text);
-  const normalizedSlug = normalizeForComparison(projectSlug);
-
-  // Check if the text matches the project slug
-  return normalizedText === normalizedSlug;
-}
-
-/**
- * Parse conversation title from document title
- * Handles various formats:
- * - "Conversation Title - ChatGPT"
- * - "ChatGPT - Project Name" (returns null - no conversation title yet)
- * - "ChatGPT" (returns null)
- */
-function parseTitleFromDocument(): string | null {
   const docTitle = document.title?.trim();
   if (!docTitle) return null;
 
-  const projectSlug = getProjectSlugFromUrl();
+  // Remove " - ChatGPT" suffix first
+  const suffixPattern = /\s*[-–|]\s*ChatGPT$/i;
+  const withoutSuffix = docTitle.replace(suffixPattern, '').trim();
+
+  if (!withoutSuffix || withoutSuffix.toLowerCase() === 'chatgpt') {
+    return null;
+  }
+
+  // Split by " - " to get [ProjectName, ConversationTitle]
+  // Use regex to handle both hyphen (-) and en-dash (–)
+  const parts = withoutSuffix.split(/\s*[-–]\s*/);
+
+  // Need at least 2 parts for project + conversation
+  if (parts.length < 2) {
+    return null;
+  }
+
+  const projectName = parts[0].trim();
+  // Join remaining parts in case conversation title contains hyphens
+  const conversationTitle = parts.slice(1).join(' - ').trim();
+
+  if (!projectName || !conversationTitle) {
+    return null;
+  }
+
+  return { projectName, conversationTitle };
+}
+
+/**
+ * Parse simple title from document (non-project conversations)
+ * Document title format: "ConversationTitle - ChatGPT"
+ */
+function parseSimpleTitle(): string | null {
+  const docTitle = document.title?.trim();
+  if (!docTitle) return null;
 
   // Remove " - ChatGPT" or " | ChatGPT" suffix
   const suffixPattern = /\s*[-–|]\s*ChatGPT$/i;
@@ -95,11 +110,6 @@ function parseTitleFromDocument(): string | null {
 
   // If empty or exactly "ChatGPT", no title
   if (!cleaned || cleaned.toLowerCase() === 'chatgpt') {
-    return null;
-  }
-
-  // If the cleaned title is just the project name, no real title yet
-  if (isJustProjectName(cleaned, projectSlug)) {
     return null;
   }
 
@@ -124,6 +134,8 @@ export function isProjectConversation(): boolean {
 
 /**
  * Get the current conversation title
+ * For project conversations: returns conversation-specific part only (excludes project prefix)
+ * For non-project conversations: returns full title
  * Returns null if no title can be determined (don't render in this case)
  */
 export function getConversationTitle(): string | null {
@@ -132,12 +144,20 @@ export function getConversationTitle(): string | null {
     return null;
   }
 
-  const projectSlug = getProjectSlugFromUrl();
+  // For project conversations, extract just the conversation-specific part
+  if (isProjectConversation()) {
+    const parsed = parseProjectTitle();
+    if (parsed) {
+      return parsed.conversationTitle;
+    }
+    // No valid project title yet
+    return null;
+  }
 
-  // Try document title parsing first (most reliable)
-  const docTitle = parseTitleFromDocument();
-  if (docTitle) {
-    return docTitle;
+  // For non-project conversations, use simple parsing
+  const simpleTitle = parseSimpleTitle();
+  if (simpleTitle) {
+    return simpleTitle;
   }
 
   // Fallback to DOM selectors (sidebar active item)
@@ -149,10 +169,6 @@ export function getConversationTitle(): string | null {
     if (domTitle.toLowerCase() === 'chatgpt') {
       return null;
     }
-    // Skip if it's just the project name
-    if (isJustProjectName(domTitle, projectSlug)) {
-      return null;
-    }
     return domTitle;
   }
 
@@ -161,30 +177,18 @@ export function getConversationTitle(): string | null {
 }
 
 /**
- * Get the current project name from URL
+ * Get the current project name from document title (properly cased)
+ * Returns null if not in a project conversation or no valid title
  */
 export function getProjectName(): string | null {
   if (!isProjectConversation()) {
     return null;
   }
 
-  const slug = getProjectSlugFromUrl();
-  if (!slug) return null;
-
-  // Convert slug to display format: "themeeting fail" -> "themeeting.fail"
-  // Try to preserve the original format by checking common patterns
-  const url = window.location.href;
-  const match = url.match(/\/g\/g-p-[^-]+-([^/]+)\/c\//);
-  if (match && match[1]) {
-    // Keep the slug format but replace hyphens with dots for domain-like names
-    // or spaces for regular names
-    const rawSlug = match[1];
-    // If it looks like a domain (has common TLD pattern), use dots
-    if (/fail$|com$|org$|net$|io$|app$|dev$/i.test(rawSlug)) {
-      return rawSlug.replace(/-/g, '.');
-    }
-    // Otherwise use the raw slug with hyphens converted to spaces
-    return rawSlug.replace(/-/g, ' ');
+  // Get project name from document title (properly cased)
+  const parsed = parseProjectTitle();
+  if (parsed) {
+    return parsed.projectName;
   }
 
   return null;
