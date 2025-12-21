@@ -1,9 +1,13 @@
 {
-  "lastSequence": 3,
+  "lastSequence": 4,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
       "adrs": ["001-footer-only-title-placement.md", "002-configurable-copy-shortcuts.md", "003-document-title-parsing-strategy.md"]
+    },
+    {
+      "branch": "fix/title-display-duplication",
+      "adrs": ["004-project-name-from-document-title.md"]
     }
   ]
 }
