@@ -1,5 +1,5 @@
 {
-  "lastSequence": 5,
+  "lastSequence": 6,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
@@ -12,6 +12,10 @@
     {
       "branch": "fix/spa-navigation-title-display",
       "adrs": ["005-title-observer-for-spa-navigation.md"]
+    },
+    {
+      "branch": "feature/tooltip-copy-feedback",
+      "adrs": ["006-tooltip-copy-feedback.md"]
     }
   ]
 }

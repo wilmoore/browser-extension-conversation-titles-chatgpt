@@ -85,4 +85,16 @@ export const TIMING = {
   URL_POLL_INTERVAL: 500,
   /** Maximum time to wait for title to update after URL change */
   TITLE_WAIT_TIMEOUT: 3000,
+  /** Duration tooltip remains visible after copy feedback */
+  TOOLTIP_FEEDBACK_DURATION: 800,
 };
+
+/**
+ * Shortcut key identifiers for tooltip highlighting
+ */
+export type ShortcutKey = 'click' | 'shift' | 'mod' | 'mod-shift';
+
+/**
+ * Tooltip element identifier
+ */
+export const TOOLTIP_ID = 'conversation-title-ext-tooltip';
