@@ -42,9 +42,12 @@ export function getCopyFormat(event: MouseEvent): CopyFormat {
 }
 
 /**
- * Format: Title only
+ * Format: Title only (includes project name if available)
  */
 export function formatTitleOnly(context: ConversationContext): string {
+  if (context.projectName) {
+    return `${context.projectName}${DELIMITER}${context.title}`;
+  }
   return context.title;
 }
 
