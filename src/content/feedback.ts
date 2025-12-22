@@ -2,6 +2,9 @@
  * Visual and audio feedback for copy actions
  */
 
+import type { ShortcutKey } from './selectors.js';
+import { showTooltipFeedback } from './title-renderer.js';
+
 /**
  * Audio feedback enabled state
  */
@@ -33,49 +36,6 @@ export function showVisualFeedback(element: HTMLElement): void {
       element.style.transition = originalTransition || '';
     }, 100);
   }, 200);
-}
-
-/**
- * Show a brief "Copied!" indicator near the element
- */
-export function showCopiedIndicator(element: HTMLElement): void {
-  const indicator = document.createElement('div');
-  indicator.textContent = 'Copied!';
-  indicator.style.cssText = `
-    position: fixed;
-    background: #10a37f;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 500;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease, transform 0.15s ease;
-    z-index: 10001;
-  `;
-
-  // Position above the element
-  const rect = element.getBoundingClientRect();
-  indicator.style.left = `${rect.left + rect.width / 2}px`;
-  indicator.style.top = `${rect.top - 8}px`;
-  indicator.style.transform = 'translateX(-50%) translateY(-100%)';
-
-  document.body.appendChild(indicator);
-
-  // Animate in
-  requestAnimationFrame(() => {
-    indicator.style.opacity = '1';
-  });
-
-  // Animate out and remove
-  setTimeout(() => {
-    indicator.style.opacity = '0';
-    indicator.style.transform = 'translateX(-50%) translateY(-100%) translateY(-4px)';
-    setTimeout(() => {
-      indicator.remove();
-    }, 150);
-  }, 800);
 }
 
 /**
@@ -111,8 +71,8 @@ export function playAudioFeedback(): void {
 /**
  * Show all feedback for a successful copy
  */
-export function showCopyFeedback(element: HTMLElement): void {
+export function showCopyFeedback(element: HTMLElement, shortcutKey: ShortcutKey): void {
   showVisualFeedback(element);
-  showCopiedIndicator(element);
+  showTooltipFeedback(element, shortcutKey);
   playAudioFeedback();
 }

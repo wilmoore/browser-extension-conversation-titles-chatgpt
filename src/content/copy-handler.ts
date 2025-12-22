@@ -1,6 +1,7 @@
 import type { ConversationContext, CopyPreferences } from '../types/index.js';
 import { CopyFormat, DEFAULT_PREFERENCES } from '../types/index.js';
 import { DELIMITER } from './selectors.js';
+import type { ShortcutKey } from './selectors.js';
 import { showCopyFeedback, setAudioEnabled } from './feedback.js';
 
 /**
@@ -24,20 +25,39 @@ export function getPreferences(): CopyPreferences {
 }
 
 /**
- * Determine the copy format based on modifier keys and preferences
+ * Determine the shortcut key based on modifier keys
  */
-export function getCopyFormat(event: MouseEvent): CopyFormat {
+export function getShortcutKey(event: MouseEvent): ShortcutKey {
   const hasModifier = event.metaKey || event.ctrlKey;
   const hasShift = event.shiftKey;
 
   if (hasModifier && hasShift) {
-    return currentPrefs.modShiftClick;
+    return 'mod-shift';
   } else if (hasModifier) {
-    return currentPrefs.modClick;
+    return 'mod';
   } else if (hasShift) {
-    return currentPrefs.shiftClick;
+    return 'shift';
   } else {
-    return currentPrefs.click;
+    return 'click';
+  }
+}
+
+/**
+ * Determine the copy format based on modifier keys and preferences
+ */
+export function getCopyFormat(event: MouseEvent): CopyFormat {
+  const shortcutKey = getShortcutKey(event);
+
+  switch (shortcutKey) {
+    case 'mod-shift':
+      return currentPrefs.modShiftClick;
+    case 'mod':
+      return currentPrefs.modClick;
+    case 'shift':
+      return currentPrefs.shiftClick;
+    case 'click':
+    default:
+      return currentPrefs.click;
   }
 }
 
@@ -126,13 +146,14 @@ export async function handleClick(
   event.preventDefault();
   event.stopPropagation();
 
+  const shortcutKey = getShortcutKey(event);
   const format = getCopyFormat(event);
   const text = getFormattedText(context, format);
 
   const success = await copyToClipboard(text);
 
   if (success) {
-    showCopyFeedback(element);
+    showCopyFeedback(element, shortcutKey);
   }
 
   return success;
