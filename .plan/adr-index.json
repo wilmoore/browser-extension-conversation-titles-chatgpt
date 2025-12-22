@@ -1,5 +1,5 @@
 {
-  "lastSequence": 4,
+  "lastSequence": 5,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
@@ -8,6 +8,10 @@
     {
       "branch": "fix/title-display-duplication",
       "adrs": ["004-project-name-from-document-title.md"]
+    },
+    {
+      "branch": "fix/spa-navigation-title-display",
+      "adrs": ["005-title-observer-for-spa-navigation.md"]
     }
   ]
 }

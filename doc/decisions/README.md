@@ -23,3 +23,4 @@ We use the [Michael Nygard format](https://cognitect.com/blog/2011/11/15/documen
 - [002. Configurable Copy Shortcuts with Chrome Storage](002-configurable-copy-shortcuts.md)
 - [003. Document Title Parsing Strategy](003-document-title-parsing-strategy.md)
 - [004. Extract Project Name from Document Title](004-project-name-from-document-title.md)
+- [005. Title Observer for SPA Navigation](005-title-observer-for-spa-navigation.md)
