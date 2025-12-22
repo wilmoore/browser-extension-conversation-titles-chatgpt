@@ -83,4 +83,6 @@ export const TIMING = {
   DEBOUNCE_DELAY: 100,
   /** Interval for URL polling fallback */
   URL_POLL_INTERVAL: 500,
+  /** Maximum time to wait for title to update after URL change */
+  TITLE_WAIT_TIMEOUT: 3000,
 };

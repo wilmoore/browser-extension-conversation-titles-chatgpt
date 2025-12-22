@@ -50,6 +50,21 @@ let urlPollInterval: ReturnType<typeof setInterval> | null = null;
 let observer: MutationObserver | null = null;
 
 /**
+ * MutationObserver for <title> element changes
+ */
+let titleObserver: MutationObserver | null = null;
+
+/**
+ * Flag to track if we're waiting for a title update after navigation
+ */
+let waitingForTitle: boolean = false;
+
+/**
+ * Timeout for title wait
+ */
+let titleWaitTimer: ReturnType<typeof setTimeout> | null = null;
+
+/**
  * Render the title with click handler attached
  */
 function renderWithHandler(): void {
@@ -122,6 +137,22 @@ function checkUrlChange(): void {
     lastUrl = currentUrl;
     // Full update on navigation
     update();
+
+    // If no title after URL change, wait for title element to update
+    if (currentContext === null && isConversationPage()) {
+      waitingForTitle = true;
+
+      // Clear any existing timeout
+      if (titleWaitTimer) {
+        clearTimeout(titleWaitTimer);
+      }
+
+      // Set timeout to stop waiting after TITLE_WAIT_TIMEOUT
+      titleWaitTimer = setTimeout(() => {
+        waitingForTitle = false;
+        titleWaitTimer = null;
+      }, TIMING.TITLE_WAIT_TIMEOUT);
+    }
   }
 }
 
@@ -143,6 +174,43 @@ function initObserver(): void {
     subtree: true,
     attributes: true,
     attributeFilter: ['class', 'aria-selected', 'data-testid'],
+  });
+}
+
+/**
+ * Callback when document title changes
+ */
+function onTitleChange(): void {
+  // Only process if we're waiting for a title
+  if (waitingForTitle) {
+    update();
+
+    // If we got a title, stop waiting
+    if (currentContext !== null) {
+      waitingForTitle = false;
+      if (titleWaitTimer) {
+        clearTimeout(titleWaitTimer);
+        titleWaitTimer = null;
+      }
+    }
+  }
+}
+
+/**
+ * Initialize observer for <title> element
+ */
+function initTitleObserver(): void {
+  const titleElement = document.querySelector('title');
+  if (!titleElement) {
+    return;
+  }
+
+  titleObserver = new MutationObserver(onTitleChange);
+
+  titleObserver.observe(titleElement, {
+    childList: true, // Text node changes
+    characterData: true, // Direct text changes
+    subtree: true, // Text nodes inside
   });
 }
 
@@ -176,6 +244,11 @@ function cleanup(): void {
     observer = null;
   }
 
+  if (titleObserver) {
+    titleObserver.disconnect();
+    titleObserver = null;
+  }
+
   if (urlPollInterval) {
     clearInterval(urlPollInterval);
     urlPollInterval = null;
@@ -185,6 +258,13 @@ function cleanup(): void {
     clearTimeout(debounceTimer);
     debounceTimer = null;
   }
+
+  if (titleWaitTimer) {
+    clearTimeout(titleWaitTimer);
+    titleWaitTimer = null;
+  }
+
+  waitingForTitle = false;
 
   removeElement();
 }
@@ -202,6 +282,7 @@ async function init(): Promise<void> {
 
   // Initialize observers
   initObserver();
+  initTitleObserver();
   initUrlPolling();
 
   // Initial update
