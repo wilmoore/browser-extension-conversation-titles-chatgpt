@@ -33,7 +33,9 @@ A lightweight Chrome extension that restores missing context in the ChatGPT UI b
 
 ### From Chrome Web Store
 
-Coming soon.
+[Install from Chrome Web Store](https://chrome.google.com/webstore/detail/conversation-titles-for-c/EXTENSION_ID_PENDING)
+
+> **Note:** Replace `EXTENSION_ID_PENDING` with the actual extension ID after publishing.
 
 ## Usage
 

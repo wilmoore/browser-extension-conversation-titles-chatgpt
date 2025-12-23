@@ -22,3 +22,9 @@ npm-debug.log*
 # Environment
 .env
 .env.local
+
+# Build packages (for store submission)
+*.zip
+
+# Playwright MCP
+.playwright-mcp/
