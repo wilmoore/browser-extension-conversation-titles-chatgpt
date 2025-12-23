@@ -33,9 +33,7 @@ A lightweight Chrome extension that restores missing context in the ChatGPT UI b
 
 ### From Chrome Web Store
 
-[Install from Chrome Web Store](https://chrome.google.com/webstore/detail/conversation-titles-for-c/EXTENSION_ID_PENDING)
-
-> **Note:** Replace `EXTENSION_ID_PENDING` with the actual extension ID after publishing.
+[Install from Chrome Web Store](https://chrome.google.com/webstore/detail/conversation-titles-for-chatgpt/kgjldbijkcbbjbnfdaebkfbpgdoogfjo)
 
 ## Usage
 
@@ -68,8 +66,9 @@ npm run dev
 
 | Field | Value |
 |-------|-------|
-| Publisher | SavvyAI |
+| Publisher | Śavvy AI |
 | Publisher ID | `df3fb377-c0da-4b93-a6fb-872b2fe2b99a` |
+| Extension ID | `kgjldbijkcbbjbnfdaebkfbpgdoogfjo` |
 | Support | wil.moore@wilmoore.com |
 
 ## Privacy
