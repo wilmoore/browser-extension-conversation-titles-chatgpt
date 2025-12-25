@@ -26,6 +26,7 @@ describe('index (SPA navigation)', () => {
       },
       onChanged: {
         addListener: vi.fn(),
+        removeListener: vi.fn(),
       },
     },
     runtime: {

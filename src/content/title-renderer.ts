@@ -125,6 +125,11 @@ export function removeElement(): void {
       existing.textContent = originalText;
       existing.style.cursor = '';
       existing.removeAttribute('id');
+      // Remove ARIA accessibility attributes
+      existing.removeAttribute('role');
+      existing.removeAttribute('aria-label');
+      existing.removeAttribute('tabindex');
+      // Remove data attributes
       delete existing.dataset.title;
       delete existing.dataset.url;
       delete existing.dataset.project;
@@ -147,12 +152,17 @@ export function removeElement(): void {
 }
 
 /**
- * Create the custom tooltip element
+ * Create the custom tooltip element with ARIA attributes
  */
 function createTooltip(): HTMLElement {
   const tooltip = document.createElement('div');
   tooltip.id = TOOLTIP_ID;
   tooltip.innerHTML = generateTooltipHTML(currentPrefs);
+
+  // ARIA accessibility attributes
+  tooltip.setAttribute('role', 'tooltip');
+  tooltip.setAttribute('aria-live', 'polite');
+
   tooltip.style.cssText = `
     position: fixed;
     bottom: 100%;
@@ -413,6 +423,14 @@ export function render(
   textElement.textContent = formatDisplayText(context);
   textElement.style.cursor = 'pointer';
   textElement.id = EXTENSION_ELEMENT_ID;
+
+  // ARIA accessibility attributes for interactive element
+  textElement.setAttribute('role', 'button');
+  textElement.setAttribute(
+    'aria-label',
+    chrome.i18n.getMessage('ariaClickToCopy') || 'Click to copy conversation title'
+  );
+  textElement.setAttribute('tabindex', '0');
 
   // Store data attributes for click handler
   textElement.dataset.title = context.title;

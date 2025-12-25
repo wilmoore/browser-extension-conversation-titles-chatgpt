@@ -82,5 +82,9 @@
   "tooltipUrl": {
     "message": "url",
     "description": "Abbreviation for URL in tooltip"
+  },
+  "ariaClickToCopy": {
+    "message": "Click to copy conversation title",
+    "description": "Accessibility label for the title element"
   }
 }
