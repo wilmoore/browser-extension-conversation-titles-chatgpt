@@ -1,0 +1,86 @@
+{
+  "extName": {
+    "message": "Conversation Titles for ChatGPT",
+    "description": "The name of the extension displayed in Chrome"
+  },
+  "extDescription": {
+    "message": "Always see and copy your ChatGPT conversation title. Configurable click shortcuts for different copy formats.",
+    "description": "The description of the extension displayed in Chrome Web Store"
+  },
+  "optionsCopyShortcuts": {
+    "message": "Copy Shortcuts",
+    "description": "Heading for the copy shortcuts section in options"
+  },
+  "optionsFeedback": {
+    "message": "Feedback",
+    "description": "Heading for the feedback section in options"
+  },
+  "shortcutClick": {
+    "message": "Click",
+    "description": "Label for the click shortcut"
+  },
+  "shortcutShift": {
+    "message": "Shift",
+    "description": "Label for the shift modifier"
+  },
+  "shortcutCmd": {
+    "message": "Cmd",
+    "description": "Label for the command/control modifier (shows Cmd on Mac)"
+  },
+  "shortcutCtrl": {
+    "message": "Ctrl",
+    "description": "Label for the control modifier (shows Ctrl on Windows/Linux)"
+  },
+  "shortcutCmdShift": {
+    "message": "Cmd+Shift",
+    "description": "Label for command+shift modifier (Mac)"
+  },
+  "shortcutCtrlShift": {
+    "message": "Ctrl+Shift",
+    "description": "Label for control+shift modifier (Windows/Linux)"
+  },
+  "formatMarkdown": {
+    "message": "Markdown link",
+    "description": "Option label for markdown link format"
+  },
+  "formatTitle": {
+    "message": "Title only",
+    "description": "Option label for title only format"
+  },
+  "formatFull": {
+    "message": "Full context",
+    "description": "Option label for full context format (project + title)"
+  },
+  "formatUrl": {
+    "message": "URL only",
+    "description": "Option label for URL only format"
+  },
+  "statusSaved": {
+    "message": "Saved",
+    "description": "Status message shown when preferences are saved"
+  },
+  "optionsFooter": {
+    "message": "Changes apply immediately to all ChatGPT tabs.",
+    "description": "Footer text in options page"
+  },
+  "optionsPlaySound": {
+    "message": "Play sound on copy",
+    "description": "Label for the audio feedback toggle"
+  },
+  "tooltipMd": {
+    "message": "md",
+    "description": "Abbreviation for markdown in tooltip"
+  },
+  "tooltipTitle": {
+    "message": "title",
+    "description": "Abbreviation for title in tooltip"
+  },
+  "tooltipFull": {
+    "message": "full",
+    "description": "Abbreviation for full context in tooltip"
+  },
+  "tooltipUrl": {
+    "message": "url",
+    "description": "Abbreviation for URL in tooltip"
+  }
+}

@@ -20,18 +20,18 @@ function isMac(): boolean {
 }
 
 /**
- * Get format label for tooltip
+ * Get format label for tooltip (localized)
  */
 function getFormatLabel(format: CopyFormat): string {
   switch (format) {
     case CopyFormat.MARKDOWN:
-      return 'md';
+      return chrome.i18n.getMessage('tooltipMd') || 'md';
     case CopyFormat.TITLE:
-      return 'title';
+      return chrome.i18n.getMessage('tooltipTitle') || 'title';
     case CopyFormat.FULL_CONTEXT:
-      return 'full';
+      return chrome.i18n.getMessage('tooltipFull') || 'full';
     case CopyFormat.URL:
-      return 'url';
+      return chrome.i18n.getMessage('tooltipUrl') || 'url';
   }
 }
 
@@ -45,14 +45,15 @@ interface ShortcutConfig {
 }
 
 /**
- * Get shortcut configurations based on preferences
+ * Get shortcut configurations based on preferences (localized)
  */
 function getShortcutConfigs(prefs: CopyPreferences): ShortcutConfig[] {
-  const mod = isMac() ? '\u2318' : 'Ctrl';
+  const mod = isMac() ? '\u2318' : (chrome.i18n.getMessage('shortcutCtrl') || 'Ctrl');
   const shift = '\u21E7';
+  const clickLabel = chrome.i18n.getMessage('shortcutClick') || 'Click';
 
   return [
-    { key: 'click', label: 'Click', format: prefs.click },
+    { key: 'click', label: clickLabel, format: prefs.click },
     { key: 'shift', label: shift, format: prefs.shiftClick },
     { key: 'mod', label: mod, format: prefs.modClick },
     { key: 'mod-shift', label: `${mod}${shift}`, format: prefs.modShiftClick },

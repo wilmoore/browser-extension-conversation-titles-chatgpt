@@ -10,16 +10,40 @@ const STORAGE_KEY = 'copyPreferences';
 // Detect macOS for modifier key labels
 const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
-// Update modifier key labels
+// Apply i18n to elements with data-i18n attribute
+function applyI18n(): void {
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const key = element.getAttribute('data-i18n');
+    if (key) {
+      const message = chrome.i18n.getMessage(key);
+      if (message) {
+        element.textContent = message;
+      }
+    }
+  });
+}
+
+// Update modifier key labels based on platform
 function updateModifierLabels(): void {
-  const modKey = isMac ? '\u2318' : 'Ctrl';
   const modLabel = document.getElementById('mod-label');
   const modShiftLabel = document.getElementById('mod-shift-label');
   const shiftLabel = document.getElementById('shift-label');
 
-  if (modLabel) modLabel.textContent = modKey;
-  if (modShiftLabel) modShiftLabel.textContent = `${modKey}+\u21E7`;
-  if (shiftLabel) shiftLabel.textContent = '\u21E7';
+  if (isMac) {
+    // Mac uses symbols
+    if (modLabel) modLabel.textContent = '\u2318';
+    if (modShiftLabel) modShiftLabel.textContent = '\u2318+\u21E7';
+    if (shiftLabel) shiftLabel.textContent = '\u21E7';
+  } else {
+    // Windows/Linux uses localized text
+    const ctrlText = chrome.i18n.getMessage('shortcutCtrl') || 'Ctrl';
+    const ctrlShiftText = chrome.i18n.getMessage('shortcutCtrlShift') || 'Ctrl+Shift';
+    const shiftText = chrome.i18n.getMessage('shortcutShift') || 'Shift';
+
+    if (modLabel) modLabel.textContent = ctrlText;
+    if (modShiftLabel) modShiftLabel.textContent = ctrlShiftText;
+    if (shiftLabel) shiftLabel.textContent = shiftText;
+  }
 }
 
 // Load preferences from storage
@@ -93,6 +117,7 @@ function handleChange(): void {
 
 // Initialize
 async function init(): Promise<void> {
+  applyI18n();
   updateModifierLabels();
 
   const prefs = await loadPreferences();
