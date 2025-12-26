@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "id": "backlog-001",
+      "title": "Add unit tests for options.ts",
+      "description": "The options page script has no corresponding test file. Functions like loadPreferences, savePreferences, applyI18n, updateModifierLabels should have test coverage.",
+      "category": "tests",
+      "priority": "medium",
+      "source": "/pro:audit",
+      "sourceBranch": "main",
+      "fingerprint": "src/options/options.ts:1-139|missing-tests",
+      "createdAt": "2025-12-26T04:20:51Z"
+    },
+    {
+      "id": "backlog-002",
+      "title": "Add unit tests for preferences.ts",
+      "description": "The preferences storage module has no corresponding test file. Functions like loadPreferences, savePreferences, onPreferencesChange should have unit tests.",
+      "category": "tests",
+      "priority": "medium",
+      "source": "/pro:audit",
+      "sourceBranch": "main",
+      "fingerprint": "src/storage/preferences.ts:1-56|missing-tests",
+      "createdAt": "2025-12-26T04:20:51Z"
+    },
+    {
+      "id": "backlog-003",
+      "title": "Add ARIA labels to options page form controls",
+      "description": "Select elements (click, shiftClick, modClick, modShiftClick) lack aria-label or aria-labelledby attributes. The toggle checkbox also lacks proper ARIA labeling. Screen readers may not properly associate labels with controls.",
+      "category": "i18n",
+      "priority": "medium",
+      "source": "/pro:audit",
+      "sourceBranch": "main",
+      "fingerprint": "src/options/options.html:160-201|missing-aria",
+      "createdAt": "2025-12-26T04:20:51Z"
+    },
+    {
+      "id": "backlog-004",
+      "title": "Update README copy shortcuts documentation",
+      "description": "README documents default shortcuts as Click=title, Shift+Click=project+title, but actual defaults in src/types/index.ts show Click=MARKDOWN, Shift+Click=FULL_CONTEXT. Documentation should reflect actual defaults.",
+      "category": "debt",
+      "priority": "low",
+      "source": "/pro:audit",
+      "sourceBranch": "main",
+      "fingerprint": "README.md:10-14|outdated-docs",
+      "createdAt": "2025-12-26T04:20:51Z"
+    }
+  ]
+}
