@@ -62,14 +62,16 @@ export function getCopyFormat(event: MouseEvent): CopyFormat {
 }
 
 /**
- * Format: Title only (includes project name if available)
+ * Format: Title only (conversation-specific part, excludes project prefix)
  */
 export function formatTitleOnly(context: ConversationContext): string {
-  if (context.projectName) {
-    return `${context.projectName}${DELIMITER}${context.title}`;
-  }
   return context.title;
 }
+
+/**
+ * Guard to prevent concurrent clipboard operations (race condition prevention)
+ */
+let copyInProgress: boolean = false;
 
 /**
  * Format: Project – Title (full context)
@@ -123,14 +125,23 @@ export function getFormattedText(
 /**
  * Copy text to clipboard
  * Returns true on success, false on failure (silent)
+ * Uses copyInProgress guard to prevent rapid duplicate operations
  */
 export async function copyToClipboard(text: string): Promise<boolean> {
+  // Prevent concurrent clipboard operations
+  if (copyInProgress) {
+    return false;
+  }
+  copyInProgress = true;
+
   try {
     await navigator.clipboard.writeText(text);
     return true;
   } catch {
     // Silent failure
     return false;
+  } finally {
+    copyInProgress = false;
   }
 }
 
@@ -195,9 +206,21 @@ export function createClickHandler(
 }
 
 /**
+ * Track elements that already have click handlers attached (prevents accumulation)
+ */
+const attachedElements = new WeakSet<HTMLElement>();
+
+/**
  * Attach click handler to element
+ * Uses WeakSet to prevent duplicate handlers on the same element
  */
 export function attachClickHandler(element: HTMLElement): void {
+  // Prevent duplicate handler attachment (memory leak prevention)
+  if (attachedElements.has(element)) {
+    return;
+  }
+
   const handler = createClickHandler(element);
   element.addEventListener('click', handler);
+  attachedElements.add(element);
 }

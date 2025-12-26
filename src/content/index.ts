@@ -65,6 +65,16 @@ let waitingForTitle: boolean = false;
 let titleWaitTimer: ReturnType<typeof setTimeout> | null = null;
 
 /**
+ * Guard to prevent concurrent update() calls (race condition prevention)
+ */
+let updateInProgress: boolean = false;
+
+/**
+ * Cleanup function for preference change listener (memory leak prevention)
+ */
+let cleanupPreferencesListener: (() => void) | null = null;
+
+/**
  * Render the title with click handler attached
  */
 function renderWithHandler(): void {
@@ -83,33 +93,45 @@ function renderWithHandler(): void {
 
 /**
  * Full update cycle: extract context, find footer, render
+ * Uses updateInProgress guard to prevent race conditions between
+ * URL poll and title observer
  */
 function update(): void {
-  // Only show on conversation pages
-  if (!isConversationPage()) {
-    removeElement();
-    currentContext = null;
+  // Prevent concurrent updates (race condition guard)
+  if (updateInProgress) {
     return;
   }
+  updateInProgress = true;
 
-  // Extract fresh context (returns null if no valid title yet)
-  const newContext = getFullContext();
-
-  // If no valid context, remove element and restore disclaimer
-  if (newContext === null) {
-    if (currentContext !== null) {
+  try {
+    // Only show on conversation pages
+    if (!isConversationPage()) {
       removeElement();
       currentContext = null;
+      return;
     }
-    return;
-  }
 
-  // Check if context changed
-  const contextChanged = !contextEquals(currentContext, newContext);
+    // Extract fresh context (returns null if no valid title yet)
+    const newContext = getFullContext();
 
-  if (contextChanged) {
-    currentContext = newContext;
-    renderWithHandler();
+    // If no valid context, remove element and restore disclaimer
+    if (newContext === null) {
+      if (currentContext !== null) {
+        removeElement();
+        currentContext = null;
+      }
+      return;
+    }
+
+    // Check if context changed
+    const contextChanged = !contextEquals(currentContext, newContext);
+
+    if (contextChanged) {
+      currentContext = newContext;
+      renderWithHandler();
+    }
+  } finally {
+    updateInProgress = false;
   }
 }
 
@@ -266,6 +288,12 @@ function cleanup(): void {
 
   waitingForTitle = false;
 
+  // Clean up preference change listener (memory leak prevention)
+  if (cleanupPreferencesListener) {
+    cleanupPreferencesListener();
+    cleanupPreferencesListener = null;
+  }
+
   removeElement();
 }
 
@@ -277,8 +305,8 @@ async function init(): Promise<void> {
   const prefs = await loadPreferences();
   applyPreferences(prefs);
 
-  // Listen for preference changes
-  onPreferencesChange(applyPreferences);
+  // Listen for preference changes (store cleanup function)
+  cleanupPreferencesListener = onPreferencesChange(applyPreferences);
 
   // Initialize observers
   initObserver();

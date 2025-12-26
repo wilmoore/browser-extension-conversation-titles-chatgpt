@@ -32,13 +32,24 @@ export async function savePreferences(prefs: CopyPreferences): Promise<boolean> 
 
 /**
  * Listen for preference changes
+ * Returns a cleanup function to remove the listener (prevents memory leaks)
  */
 export function onPreferencesChange(
   callback: (prefs: CopyPreferences) => void
-): void {
-  chrome.storage.onChanged.addListener((changes, area) => {
+): () => void {
+  const listener = (
+    changes: { [key: string]: chrome.storage.StorageChange },
+    area: string
+  ): void => {
     if (area === 'sync' && changes[STORAGE_KEY]) {
       callback(changes[STORAGE_KEY].newValue as CopyPreferences);
     }
-  });
+  };
+
+  chrome.storage.onChanged.addListener(listener);
+
+  // Return cleanup function
+  return () => {
+    chrome.storage.onChanged.removeListener(listener);
+  };
 }
