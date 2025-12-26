@@ -1,5 +1,5 @@
 {
-  "lastSequence": 6,
+  "lastSequence": 9,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
@@ -16,6 +16,10 @@
     {
       "branch": "feature/tooltip-copy-feedback",
       "adrs": ["006-tooltip-copy-feedback.md"]
+    },
+    {
+      "branch": "fix/gaps-verification-critical-path",
+      "adrs": ["007-race-condition-guards.md", "008-memory-leak-prevention.md", "009-playwright-e2e-testing.md"]
     }
   ]
 }
