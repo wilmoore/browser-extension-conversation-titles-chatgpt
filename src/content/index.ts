@@ -75,7 +75,14 @@ let updateInProgress: boolean = false;
 let cleanupPreferencesListener: (() => void) | null = null;
 
 /**
+ * Reference to the current display element (for detecting DOM replacement)
+ * React may replace DOM nodes during re-renders, losing attached handlers.
+ */
+let currentElementRef: HTMLElement | null = null;
+
+/**
  * Render the title with click handler attached
+ * Updates currentElementRef to track the DOM element for replacement detection
  */
 function renderWithHandler(): void {
   if (!currentContext) return;
@@ -87,7 +94,10 @@ function renderWithHandler(): void {
     const element = getDisplayElement();
     if (element) {
       attachClickHandler(element);
+      currentElementRef = element;
     }
+  } else {
+    currentElementRef = null;
   }
 }
 
@@ -95,6 +105,10 @@ function renderWithHandler(): void {
  * Full update cycle: extract context, find footer, render
  * Uses updateInProgress guard to prevent race conditions between
  * URL poll and title observer
+ *
+ * Detects both context changes AND DOM element replacement.
+ * React may replace DOM nodes during re-renders, which loses attached
+ * event handlers even if the context (title/URL) hasn't changed.
  */
 function update(): void {
   // Prevent concurrent updates (race condition guard)
@@ -108,6 +122,7 @@ function update(): void {
     if (!isConversationPage()) {
       removeElement();
       currentContext = null;
+      currentElementRef = null;
       return;
     }
 
@@ -119,6 +134,7 @@ function update(): void {
       if (currentContext !== null) {
         removeElement();
         currentContext = null;
+        currentElementRef = null;
       }
       return;
     }
@@ -126,7 +142,20 @@ function update(): void {
     // Check if context changed
     const contextChanged = !contextEquals(currentContext, newContext);
 
-    if (contextChanged) {
+    // Check if element was replaced by React re-render
+    // The element reference changes when React replaces the DOM node
+    const currentElement = getDisplayElement();
+    const elementReplaced =
+      currentElementRef !== null &&
+      (currentElement === null || currentElement !== currentElementRef);
+
+    // Also detect if element is missing entirely (was removed from DOM)
+    const elementMissing =
+      currentContext !== null &&
+      currentElementRef !== null &&
+      !currentElementRef.isConnected;
+
+    if (contextChanged || elementReplaced || elementMissing) {
       currentContext = newContext;
       renderWithHandler();
     }
@@ -293,6 +322,9 @@ function cleanup(): void {
     cleanupPreferencesListener();
     cleanupPreferencesListener = null;
   }
+
+  // Clear element reference (memory leak prevention)
+  currentElementRef = null;
 
   removeElement();
 }

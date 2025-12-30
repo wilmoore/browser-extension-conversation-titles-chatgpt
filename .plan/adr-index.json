@@ -1,5 +1,5 @@
 {
-  "lastSequence": 9,
+  "lastSequence": 10,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
@@ -20,6 +20,10 @@
     {
       "branch": "fix/gaps-verification-critical-path",
       "adrs": ["007-race-condition-guards.md", "008-memory-leak-prevention.md", "009-playwright-e2e-testing.md"]
+    },
+    {
+      "branch": "fix/click-handlers-not-attached-after-react-rerender",
+      "adrs": ["010-dom-element-reference-tracking.md"]
     }
   ]
 }

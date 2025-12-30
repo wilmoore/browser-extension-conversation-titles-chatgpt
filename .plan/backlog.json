@@ -1,5 +1,18 @@
 {
+  "lastSequence": 5,
   "items": [
+    {
+      "id": "backlog-005",
+      "title": "Click handlers not attached after React re-render",
+      "description": "Chrome Web Store rejection: click shortcuts for different copy formats functionality not working. Root cause: When ChatGPT's React re-renders the footer and replaces the DOM element, the extension only checks if context changed (title/URL), not if the element was replaced. New elements have correct attributes but no event handlers attached.",
+      "category": "bug",
+      "severity": "critical",
+      "fingerprint": "bug|005|click-handlers-not-attached",
+      "source": "/pro:bug",
+      "sourceBranch": "fix/click-handlers-not-attached-after-react-rerender",
+      "createdAt": "2025-12-26T12:00:00Z",
+      "status": "in-progress"
+    },
     {
       "id": "backlog-001",
       "title": "Add unit tests for options.ts",
