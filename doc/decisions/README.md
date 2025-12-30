@@ -29,3 +29,4 @@ We use the [Michael Nygard format](https://cognitect.com/blog/2011/11/15/documen
 - [008. Memory Leak Prevention](008-memory-leak-prevention.md)
 - [009. Playwright E2E Testing](009-playwright-e2e-testing.md)
 - [010. DOM Element Reference Tracking](010-dom-element-reference-tracking.md)
+- [011. Structural Footer Detection](011-structural-footer-detection.md)

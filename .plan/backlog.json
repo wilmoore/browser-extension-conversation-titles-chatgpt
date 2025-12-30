@@ -1,6 +1,18 @@
 {
-  "lastSequence": 7,
+  "lastSequence": 8,
   "items": [
+    {
+      "id": "backlog-008",
+      "title": "Title not showing in custom GPTs",
+      "description": "Conversation titles display consistently everywhere except custom GPTs. Root cause: Footer detection relies on hardcoded text patterns ('ChatGPT can make mistakes') but custom GPTs can show different text like 'New version of GPT available...' Solution: Use structural/positional detection instead of text-pattern matching.",
+      "category": "bug",
+      "severity": "high",
+      "fingerprint": "bug|008|title-not-showing-custom-gpts",
+      "source": "/pro:bug",
+      "sourceBranch": "fix/title-not-showing-in-custom-gpts",
+      "createdAt": "2025-12-30T18:00:00Z",
+      "status": "completed"
+    },
     {
       "id": "backlog-007",
       "title": "Icon refresh - Ț glyph design",

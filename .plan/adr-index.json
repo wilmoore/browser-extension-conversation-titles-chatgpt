@@ -1,5 +1,5 @@
 {
-  "lastSequence": 10,
+  "lastSequence": 11,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
@@ -24,6 +24,10 @@
     {
       "branch": "fix/click-handlers-not-attached-after-react-rerender",
       "adrs": ["010-dom-element-reference-tracking.md"]
+    },
+    {
+      "branch": "fix/title-not-showing-in-custom-gpts",
+      "adrs": ["011-structural-footer-detection.md"]
     }
   ]
 }
