@@ -155,7 +155,12 @@ function update(): void {
       currentElementRef !== null &&
       !currentElementRef.isConnected;
 
-    if (contextChanged || elementReplaced || elementMissing) {
+    // Detect if we have context but failed to render (footer didn't exist initially)
+    // This handles the case where streaming creates the footer after initial render attempt
+    const needsInitialRender =
+      currentContext !== null && currentElementRef === null;
+
+    if (contextChanged || elementReplaced || elementMissing || needsInitialRender) {
       currentContext = newContext;
       renderWithHandler();
     }

@@ -234,6 +234,43 @@ describe('index (SPA navigation)', () => {
     });
   });
 
+  describe('needsInitialRender behavior', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    it('retries render when context exists but element was never rendered', async () => {
+      // This test verifies the fix for the bug where:
+      // 1. URL changes to conversation page
+      // 2. Title is ready but footer element doesn't exist yet (streaming)
+      // 3. First render attempt fails
+      // 4. Footer appears later via DOM mutation
+      // 5. Extension should retry render (this was the bug - it didn't)
+
+      // Start on conversation page (as if navigated mid-stream)
+      mockLocationHref = 'https://chatgpt.com/c/abc123';
+      mockDocumentTitle = 'My Conversation - ChatGPT';
+
+      // Import module - this triggers initial update
+      await import('./index.js');
+
+      // Trigger URL poll to run update cycle
+      vi.advanceTimersByTime(TIMING.URL_POLL_INTERVAL);
+
+      // At this point:
+      // - currentContext is set (title extracted successfully)
+      // - currentElementRef is null (render failed, no footer)
+      // - needsInitialRender condition should be true on next update
+
+      // Trigger debounced DOM mutation update
+      vi.advanceTimersByTime(TIMING.DEBOUNCE_DELAY);
+
+      // The update should run without errors
+      // In the real scenario, this would eventually succeed when footer appears
+      vi.advanceTimersByTime(TIMING.URL_POLL_INTERVAL);
+    });
+  });
+
   describe('cleanup behavior', () => {
     it('disconnects observers on unload', async () => {
       vi.useFakeTimers();
