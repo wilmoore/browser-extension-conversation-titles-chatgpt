@@ -28,7 +28,15 @@ export const TITLE_SELECTORS = [
 ];
 
 /**
+ * Primary structural selector for the footer area
+ * ChatGPT uses this view-transition-name as a semantic marker for the disclaimer/footer
+ * regardless of text content (works for both standard disclaimer and custom GPT messages)
+ */
+export const FOOTER_STRUCTURAL_SELECTOR = '[class*="vt-disclaimer"]';
+
+/**
  * Selectors for the footer area (title placement location)
+ * Used as fallbacks if structural selector fails
  */
 export const FOOTER_SELECTORS = [
   // Thread bottom container (most specific for ChatGPT)
@@ -52,7 +60,9 @@ export const FOOTER_SELECTORS = [
 ];
 
 /**
- * Text patterns to identify the disclaimer element
+ * Text patterns for the standard disclaimer element
+ * NOTE: These are used for original text restoration, NOT for element detection.
+ * Element detection now uses structural selectors (FOOTER_STRUCTURAL_SELECTOR).
  */
 export const DISCLAIMER_PATTERNS = [
   'ChatGPT can make mistakes',

@@ -1,16 +1,8 @@
 import type { ConversationContext, CopyPreferences } from '../types/index.js';
 import { CopyFormat, DEFAULT_PREFERENCES } from '../types/index.js';
-import { EXTENSION_ELEMENT_ID, DISCLAIMER_PATTERNS, TOOLTIP_ID, TIMING } from './selectors.js';
+import { EXTENSION_ELEMENT_ID, TOOLTIP_ID, TIMING } from './selectors.js';
 import type { ShortcutKey } from './selectors.js';
 import { formatDisplayText } from './context-extractor.js';
-
-/**
- * Check if element contains disclaimer text
- */
-function isDisclaimerElement(element: Element): boolean {
-  const text = element.textContent || '';
-  return DISCLAIMER_PATTERNS.some(pattern => text.includes(pattern));
-}
 
 /**
  * Detect if user is on macOS
@@ -122,7 +114,12 @@ export function removeElement(): void {
     if (replacedDisclaimerElement &&
         replacedDisclaimerElement.isConnected &&
         existing === replacedDisclaimerElement) {
-      existing.textContent = originalText;
+      // Restore using innerHTML or textContent based on what we stored
+      if (storedAsInnerHTML) {
+        existing.innerHTML = originalText;
+      } else {
+        existing.textContent = originalText;
+      }
       existing.style.cursor = '';
       existing.removeAttribute('id');
       // Remove ARIA accessibility attributes
@@ -137,6 +134,7 @@ export function removeElement(): void {
     // Always reset our tracking state
     replacedDisclaimerElement = null;
     originalText = null;
+    storedAsInnerHTML = false;
     return;
   }
 
@@ -149,6 +147,7 @@ export function removeElement(): void {
   // Reset state even if we didn't find the element
   replacedDisclaimerElement = null;
   originalText = null;
+  storedAsInnerHTML = false;
 }
 
 /**
@@ -401,25 +400,36 @@ export function render(
     return false;
   }
 
-  // Only render if this is the actual disclaimer element
-  if (!(targetElement instanceof HTMLElement) || !isDisclaimerElement(targetElement)) {
+  // Ensure target is an HTMLElement
+  if (!(targetElement instanceof HTMLElement)) {
     return false;
   }
 
-  // Find the innermost text element
-  const textElement = findDisclaimerTextElement(targetElement);
+  // Find the innermost text element within the footer
+  const textElement = findFooterTextElement(targetElement);
 
   if (!textElement) {
     return false;
   }
 
-  // Store original text for restoration (only once)
+  // Store original content for restoration (only once)
   if (originalText === null) {
-    originalText = textElement.textContent;
+    // For elements with children (complex structures like GPT version message),
+    // store innerHTML so we can restore the full structure
+    if (textElement.children.length > 0) {
+      originalText = textElement.innerHTML;
+      storedAsInnerHTML = true;
+    } else {
+      originalText = textElement.textContent;
+      storedAsInnerHTML = false;
+    }
     replacedDisclaimerElement = textElement;
   }
 
-  // Replace text content directly (preserves all styling)
+  // Replace content - use innerHTML for complex structures to clear everything
+  if (textElement.children.length > 0 || storedAsInnerHTML) {
+    textElement.innerHTML = '';
+  }
   textElement.textContent = formatDisplayText(context);
   textElement.style.cursor = 'pointer';
   textElement.id = EXTENSION_ELEMENT_ID;
@@ -446,25 +456,47 @@ export function render(
 }
 
 /**
- * Find the innermost element containing the disclaimer text
+ * Track if we stored innerHTML (vs textContent) for proper restoration
  */
-function findDisclaimerTextElement(container: HTMLElement): HTMLElement | null {
-  // If this element directly contains the disclaimer text (no child elements with text)
-  if (container.children.length === 0 && container.textContent?.includes('ChatGPT can make mistakes')) {
+let storedAsInnerHTML: boolean = false;
+
+/**
+ * Find the best element to use for title display
+ * For complex structures (GPT version message with icon/links), use the container
+ * For simple structures (single text span), use the leaf element
+ */
+function findFooterTextElement(container: HTMLElement): HTMLElement | null {
+  // If container has no children and has text content, use it directly
+  if (container.children.length === 0 && container.textContent?.trim()) {
     return container;
   }
 
-  // Search children for leaf nodes containing the disclaimer
-  for (const child of container.querySelectorAll('*')) {
-    if (child instanceof HTMLElement &&
-        child.children.length === 0 &&
-        child.textContent?.includes('ChatGPT can make mistakes')) {
-      return child;
+  // Check if the structure is complex (multiple text-containing elements)
+  // Complex structures should use the container to replace ALL content
+  const textElements = Array.from(container.querySelectorAll('*')).filter(
+    el => el instanceof HTMLElement && el.children.length === 0 && el.textContent?.trim()
+  );
+
+  // If only one leaf text element, use it directly (simple case like standard disclaimer)
+  if (textElements.length === 1) {
+    return textElements[0] as HTMLElement;
+  }
+
+  // For complex structures (multiple text elements like GPT version message),
+  // find the first child container that contains all the text content
+  // and use that to replace everything
+  if (container.children.length > 0) {
+    const firstChild = container.children[0];
+    if (firstChild instanceof HTMLElement && firstChild.textContent?.trim()) {
+      return firstChild;
     }
   }
 
-  // No suitable element found - don't return container as fallback
-  // This prevents modifying the wrong element
+  // Fallback: use container itself
+  if (container.textContent?.trim()) {
+    return container;
+  }
+
   return null;
 }
 
