@@ -128,11 +128,12 @@ export function isConversationPage(): boolean {
 }
 
 /**
- * Check if we're in a project
+ * Check if we're in a project (not a custom GPT)
+ * Projects have URLs like /g/g-p-.../c/...
+ * Custom GPTs have URLs like /g/g-xxx.../c/... (without g-p- prefix)
  */
 export function isProjectConversation(): boolean {
-  const url = window.location.href;
-  return url.includes('/g/') && url.includes('/c/');
+  return isProjectUrl();
 }
 
 /**

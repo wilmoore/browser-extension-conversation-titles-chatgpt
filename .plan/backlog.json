@@ -1,6 +1,29 @@
 {
-  "lastSequence": 6,
+  "lastSequence": 8,
   "items": [
+    {
+      "id": "backlog-008",
+      "title": "Title not showing in custom GPTs",
+      "description": "Conversation titles display consistently everywhere except custom GPTs. Root cause: Footer detection relies on hardcoded text patterns ('ChatGPT can make mistakes') but custom GPTs can show different text like 'New version of GPT available...' Solution: Use structural/positional detection instead of text-pattern matching.",
+      "category": "bug",
+      "severity": "high",
+      "fingerprint": "bug|008|title-not-showing-custom-gpts",
+      "source": "/pro:bug",
+      "sourceBranch": "fix/title-not-showing-in-custom-gpts",
+      "createdAt": "2025-12-30T18:00:00Z",
+      "status": "completed"
+    },
+    {
+      "id": "backlog-007",
+      "title": "Icon refresh - Ț glyph design",
+      "description": "Update extension icon to refined Ț glyph with charcoal on off-white color scheme. Replace cartoonish chain-link icon with clean, editorial serif letterform. DEFERRED: SVG renders well but PNG generation at small sizes (16, 32, 48px) produces blurry results. Need alternative methodology - either manual pixel-perfect creation in design tool or different rendering approach.",
+      "category": "chore",
+      "priority": "low",
+      "fingerprint": "chore|007|icon-refresh-glyph",
+      "source": "/pro:chore",
+      "createdAt": "2025-12-30T12:00:00Z",
+      "status": "deferred"
+    },
     {
       "id": "backlog-006",
       "title": "Title not rendering when new conversation starts",

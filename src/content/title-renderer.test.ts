@@ -83,11 +83,15 @@ describe('title-renderer', () => {
       expect(result).toBe(false);
     });
 
-    it('returns false when element does not contain disclaimer text', () => {
-      const nonDisclaimer = document.createElement('div');
-      nonDisclaimer.textContent = 'Some other text';
-      const result = render(mockContext, nonDisclaimer);
-      expect(result).toBe(false);
+    it('renders successfully for any text content (structural detection)', () => {
+      // With structural detection, render succeeds for any element with text
+      const anyText = document.createElement('div');
+      const textSpan = document.createElement('span');
+      textSpan.textContent = 'Any footer text content';
+      anyText.appendChild(textSpan);
+      const result = render(mockContext, anyText);
+      expect(result).toBe(true);
+      expect(textSpan.textContent).toBe('Test Conversation');
     });
 
     it('renders conversation title into disclaimer element', () => {
@@ -438,8 +442,8 @@ describe('title-renderer', () => {
     });
   });
 
-  describe('isDisclaimerElement (via render)', () => {
-    it('detects disclaimer with "ChatGPT can make mistakes" pattern', () => {
+  describe('structural detection (no text pattern requirement)', () => {
+    it('renders with standard disclaimer text', () => {
       const element = document.createElement('span');
       element.textContent = 'ChatGPT can make mistakes. Check important info.';
       container.innerHTML = '';
@@ -447,20 +451,33 @@ describe('title-renderer', () => {
 
       const result = render(mockContext, container);
       expect(result).toBe(true);
+      expect(element.textContent).toBe('Test Conversation');
     });
 
-    it('rejects element without disclaimer pattern', () => {
+    it('renders with custom GPT version message', () => {
+      // Key test: custom GPT footer text should work
+      const element = document.createElement('span');
+      element.textContent = 'New version of GPT available - Continue chatting...';
+      container.innerHTML = '';
+      container.appendChild(element);
+
+      const result = render(mockContext, container);
+      expect(result).toBe(true);
+      expect(element.textContent).toBe('Test Conversation');
+    });
+
+    it('renders with any arbitrary text', () => {
       container.innerHTML = '<span>Random text here</span>';
       const result = render(mockContext, container);
-      expect(result).toBe(false);
+      expect(result).toBe(true);
     });
   });
 
-  describe('findDisclaimerTextElement (via render)', () => {
+  describe('findFooterTextElement (via render)', () => {
     it('finds direct text node child', () => {
       const wrapper = document.createElement('div');
       const textSpan = document.createElement('span');
-      textSpan.textContent = disclaimerText;
+      textSpan.textContent = 'Any footer text';
       wrapper.appendChild(textSpan);
       document.body.appendChild(wrapper);
 
@@ -472,7 +489,7 @@ describe('title-renderer', () => {
       const wrapper = document.createElement('div');
       const inner = document.createElement('div');
       const textSpan = document.createElement('span');
-      textSpan.textContent = disclaimerText;
+      textSpan.textContent = 'Custom GPT footer text';
       inner.appendChild(textSpan);
       wrapper.appendChild(inner);
       document.body.appendChild(wrapper);
@@ -481,21 +498,33 @@ describe('title-renderer', () => {
       expect(textSpan.id).toBe(EXTENSION_ELEMENT_ID);
     });
 
-    it('returns false when disclaimer text is in non-leaf element', () => {
-      // Create element with disclaimer but with child elements
+    it('returns false when no leaf text element exists', () => {
+      // Container with only empty child elements (no text)
       const wrapper = document.createElement('div');
-      wrapper.textContent = disclaimerText;
       const child = document.createElement('span');
+      // child has no text content
       wrapper.appendChild(child);
       document.body.appendChild(wrapper);
 
-      // The disclaimer text is split across text nodes now, not in a single leaf
-      // This scenario tests that we don't modify parent elements incorrectly
       const result = render(mockContext, wrapper);
-      // This depends on implementation - may return false if no suitable leaf found
-      // In this case, the wrapper itself has children so it won't be selected
-      // and the child span doesn't contain the disclaimer
+      // No leaf element with text content, should return false
       expect(result).toBe(false);
+    });
+
+    it('finds first leaf with text when multiple exist', () => {
+      const wrapper = document.createElement('div');
+      const first = document.createElement('span');
+      first.textContent = 'First text';
+      const second = document.createElement('span');
+      second.textContent = 'Second text';
+      wrapper.appendChild(first);
+      wrapper.appendChild(second);
+      document.body.appendChild(wrapper);
+
+      render(mockContext, wrapper);
+      // Should find and modify the first leaf with text
+      expect(first.id).toBe(EXTENSION_ELEMENT_ID);
+      expect(second.id).not.toBe(EXTENSION_ELEMENT_ID);
     });
   });
 
