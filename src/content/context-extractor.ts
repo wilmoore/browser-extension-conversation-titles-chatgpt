@@ -56,15 +56,18 @@ interface ParsedProjectTitle {
 /**
  * Parse document title for project conversations
  * Document title format: "ProjectName - ConversationTitle - ChatGPT"
- * Returns null if not a valid project conversation title
+ * or "ProjectName - ConversationTitle" (when title ends with ChatGPT)
+ *
+ * Can be called with requireUrl=true to only parse when URL has /g/
+ * or requireUrl=false to try parsing based on title format alone
  */
-function parseProjectTitle(): ParsedProjectTitle | null {
-  if (!isProjectUrl()) return null;
+function parseProjectTitle(requireUrl: boolean = true): ParsedProjectTitle | null {
+  if (requireUrl && !isProjectUrl()) return null;
 
   const docTitle = document.title?.trim();
   if (!docTitle) return null;
 
-  // Remove " - ChatGPT" suffix first
+  // Remove " - ChatGPT" suffix first (if present)
   const suffixPattern = /\s*[-–|]\s*ChatGPT$/i;
   const withoutSuffix = docTitle.replace(suffixPattern, '').trim();
 
@@ -144,14 +147,21 @@ export function getConversationTitle(): string | null {
     return null;
   }
 
-  // For project conversations, extract just the conversation-specific part
+  // For project conversations (URL has /g/), require URL match
   if (isProjectConversation()) {
-    const parsed = parseProjectTitle();
+    const parsed = parseProjectTitle(true);
     if (parsed) {
       return parsed.conversationTitle;
     }
     // No valid project title yet
     return null;
+  }
+
+  // For /c/ URLs, first try project parsing based on title format
+  // (project conversations can sometimes be accessed via /c/ URL)
+  const projectParsed = parseProjectTitle(false);
+  if (projectParsed) {
+    return projectParsed.conversationTitle;
   }
 
   // For non-project conversations, use simple parsing
@@ -181,14 +191,22 @@ export function getConversationTitle(): string | null {
  * Returns null if not in a project conversation or no valid title
  */
 export function getProjectName(): string | null {
-  if (!isProjectConversation()) {
+  // For /g/ URLs, require URL match
+  if (isProjectConversation()) {
+    const parsed = parseProjectTitle(true);
+    if (parsed) {
+      return parsed.projectName;
+    }
     return null;
   }
 
-  // Get project name from document title (properly cased)
-  const parsed = parseProjectTitle();
-  if (parsed) {
-    return parsed.projectName;
+  // For /c/ URLs, try project parsing based on title format
+  // (project conversations can sometimes be accessed via /c/ URL)
+  if (isConversationPage()) {
+    const parsed = parseProjectTitle(false);
+    if (parsed) {
+      return parsed.projectName;
+    }
   }
 
   return null;

@@ -28,3 +28,4 @@ We use the [Michael Nygard format](https://cognitect.com/blog/2011/11/15/documen
 - [007. Race Condition Guards](007-race-condition-guards.md)
 - [008. Memory Leak Prevention](008-memory-leak-prevention.md)
 - [009. Playwright E2E Testing](009-playwright-e2e-testing.md)
+- [010. DOM Element Reference Tracking](010-dom-element-reference-tracking.md)
