@@ -1,6 +1,18 @@
 {
-  "lastSequence": 5,
+  "lastSequence": 6,
   "items": [
+    {
+      "id": "backlog-006",
+      "title": "Title not rendering when new conversation starts",
+      "description": "When starting a new conversation, the title fails to render even though document.title is set. Root cause: When footer element doesn't exist during initial streaming, render fails but currentContext is still set. On subsequent DOM updates, all render conditions are false so it never retries. Missing condition: need to retry render when currentContext is set but currentElementRef is null.",
+      "category": "bug",
+      "severity": "high",
+      "fingerprint": "bug|006|title-not-rendering-new-conversation",
+      "source": "/pro:bug",
+      "sourceBranch": "fix/title-not-rendering-on-new-conversation",
+      "createdAt": "2025-12-29T12:00:00Z",
+      "status": "completed"
+    },
     {
       "id": "backlog-005",
       "title": "Click handlers not attached after React re-render",
@@ -11,7 +23,7 @@
       "source": "/pro:bug",
       "sourceBranch": "fix/click-handlers-not-attached-after-react-rerender",
       "createdAt": "2025-12-26T12:00:00Z",
-      "status": "in-progress"
+      "status": "completed"
     },
     {
       "id": "backlog-001",
