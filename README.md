@@ -71,6 +71,8 @@ npm run dev
 | Extension ID | `kgjldbijkcbbjbnfdaebkfbpgdoogfjo` |
 | Support | wil.moore@wilmoore.com |
 
+See [PUBLISHING.md](./PUBLISHING.md) for update release instructions.
+
 ## Privacy
 
 This extension:
