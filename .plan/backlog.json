@@ -1,6 +1,18 @@
 {
-  "lastSequence": 9,
+  "lastSequence": 10,
   "items": [
+    {
+      "id": "backlog-010",
+      "title": "CWS command naming confusion",
+      "description": "cws:dashboard command opened extension edit page instead of developer console dashboard. Renamed commands for clarity: cws:console (dev console), cws:edit (extension edit page), cws:listing (public store listing).",
+      "category": "bug",
+      "severity": "low",
+      "fingerprint": "bug|010|cws-command-naming",
+      "source": "/pro:bug",
+      "sourceBranch": "fix/cws-command-naming",
+      "createdAt": "2026-01-01T18:00:00Z",
+      "status": "completed"
+    },
     {
       "id": "backlog-009",
       "title": "Add commands to open CWS dashboard and listing",

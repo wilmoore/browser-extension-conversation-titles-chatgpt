@@ -79,20 +79,26 @@ OPEN_CMD := $(shell \
 	elif [ -n "$$WSL_DISTRO_NAME" ]; then echo 'cmd.exe /c start ""'; \
 	else echo "xdg-open"; fi)
 
-.PHONY: cws-dashboard
-cws-dashboard: ## Open Chrome Web Store developer dashboard
+.PHONY: cws-console
+cws-console: ## Open Chrome Web Store developer console
 ifdef PUBLISHER_ID
-ifdef EXTENSION_ID
-	$(OPEN_CMD) "https://chrome.google.com/u/0/webstore/devconsole/$(PUBLISHER_ID)/$(EXTENSION_ID)/edit"
-else
 	$(OPEN_CMD) "https://chrome.google.com/u/0/webstore/devconsole/$(PUBLISHER_ID)"
-endif
 else
 	$(OPEN_CMD) "https://chrome.google.com/u/0/webstore/devconsole"
 endif
 
-.PHONY: cws-open
-cws-open: ## Open public Chrome Web Store listing
+.PHONY: cws-edit
+cws-edit: ## Open extension edit page in developer console
+ifndef PUBLISHER_ID
+	$(error PUBLISHER_ID is not set. Set it in .env to open the edit page)
+endif
+ifndef EXTENSION_ID
+	$(error EXTENSION_ID is not set. Set it in .env to open the edit page)
+endif
+	$(OPEN_CMD) "https://chrome.google.com/u/0/webstore/devconsole/$(PUBLISHER_ID)/$(EXTENSION_ID)/edit"
+
+.PHONY: cws-listing
+cws-listing: ## Open public Chrome Web Store listing
 ifndef EXTENSION_ID
 	$(error EXTENSION_ID is not set. Set it in .env to open the listing)
 endif
@@ -111,11 +117,14 @@ publish: cws-publish ## Alias for cws-publish
 .PHONY: status
 status: cws-status ## Alias for cws-status
 
-.PHONY: dashboard
-dashboard: cws-dashboard ## Alias for cws-dashboard
+.PHONY: console
+console: cws-console ## Alias for cws-console
 
-.PHONY: open
-open: cws-open ## Alias for cws-open
+.PHONY: edit
+edit: cws-edit ## Alias for cws-edit
+
+.PHONY: listing
+listing: cws-listing ## Alias for cws-listing
 
 # Development targets
 .PHONY: dev
