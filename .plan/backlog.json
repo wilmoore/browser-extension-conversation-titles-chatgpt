@@ -1,6 +1,18 @@
 {
-  "lastSequence": 8,
+  "lastSequence": 9,
   "items": [
+    {
+      "id": "backlog-009",
+      "title": "Add commands to open CWS dashboard and listing",
+      "description": "Add make targets and npm scripts to open Chrome Web Store developer dashboard and public listing page. cws-dashboard opens dev console (useful pre-publish), cws-open opens public listing (useful post-publish). Auto-detect OS for browser open command.",
+      "category": "chore",
+      "priority": "low",
+      "fingerprint": "chore|009|cws-open-commands",
+      "source": "/pro:chore",
+      "sourceBranch": "chore/cws-open-commands",
+      "createdAt": "2026-01-01T12:00:00Z",
+      "status": "completed"
+    },
     {
       "id": "backlog-008",
       "title": "Title not showing in custom GPTs",

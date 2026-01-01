@@ -72,6 +72,32 @@ cws-status: check-env ## Check Chrome Web Store extension status
 		"https://www.googleapis.com/chromewebstore/v1.1/items/$(EXTENSION_ID)?projection=DRAFT" | \
 		jq -r '"ID:           \(.id)\nPublished:    \(.crxVersion)\nDraft State:  \(.uploadState)\nErrors:       \(.itemError // "none")"'
 
+# Browser open command (auto-detect OS)
+# Note: WSL uses 'start ""' with empty title because start treats first quoted arg as window title
+OPEN_CMD := $(shell \
+	if [ "$$(uname)" = "Darwin" ]; then echo "open"; \
+	elif [ -n "$$WSL_DISTRO_NAME" ]; then echo 'cmd.exe /c start ""'; \
+	else echo "xdg-open"; fi)
+
+.PHONY: cws-dashboard
+cws-dashboard: ## Open Chrome Web Store developer dashboard
+ifdef PUBLISHER_ID
+ifdef EXTENSION_ID
+	$(OPEN_CMD) "https://chrome.google.com/u/0/webstore/devconsole/$(PUBLISHER_ID)/$(EXTENSION_ID)/edit"
+else
+	$(OPEN_CMD) "https://chrome.google.com/u/0/webstore/devconsole/$(PUBLISHER_ID)"
+endif
+else
+	$(OPEN_CMD) "https://chrome.google.com/u/0/webstore/devconsole"
+endif
+
+.PHONY: cws-open
+cws-open: ## Open public Chrome Web Store listing
+ifndef EXTENSION_ID
+	$(error EXTENSION_ID is not set. Set it in .env to open the listing)
+endif
+	$(OPEN_CMD) "https://chromewebstore.google.com/detail/$(EXTENSION_ID)"
+
 # Convenience aliases
 .PHONY: release
 release: cws-deploy ## Alias for cws-deploy
@@ -84,6 +110,12 @@ publish: cws-publish ## Alias for cws-publish
 
 .PHONY: status
 status: cws-status ## Alias for cws-status
+
+.PHONY: dashboard
+dashboard: cws-dashboard ## Alias for cws-dashboard
+
+.PHONY: open
+open: cws-open ## Alias for cws-open
 
 # Development targets
 .PHONY: dev
