@@ -71,7 +71,11 @@ npm run dev
 | Extension ID | `kgjldbijkcbbjbnfdaebkfbpgdoogfjo` |
 | Support | wil.moore@wilmoore.com |
 
-See [PUBLISHING.md](./PUBLISHING.md) for update release instructions.
+**Links:**
+- [Developer Dashboard](https://chrome.google.com/webstore/devconsole/df3fb377-c0da-4b93-a6fb-872b2fe2b99a)
+- [Store Listing Editor](https://chrome.google.com/webstore/devconsole/df3fb377-c0da-4b93-a6fb-872b2fe2b99a/kgjldbijkcbbjbnfdaebkfbpgdoogfjo/edit)
+
+See [docs/PUBLISHING.md](./docs/PUBLISHING.md) for automated release instructions.
 
 ## Privacy
 
