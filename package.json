@@ -18,6 +18,8 @@
     "cws:upload": "chrome-webstore-upload upload --source dist.zip --extension-id $EXTENSION_ID",
     "cws:publish": "chrome-webstore-upload publish --extension-id $EXTENSION_ID",
     "cws:deploy": "npm run package && npm run cws:upload && npm run cws:publish",
+    "cws:dashboard": "make cws-dashboard",
+    "cws:open": "make cws-open",
     "release": "npm run cws:deploy"
   },
   "devDependencies": {
