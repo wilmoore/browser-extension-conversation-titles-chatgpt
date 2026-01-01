@@ -60,6 +60,18 @@ cws-publish: check-env ## Publish the uploaded draft to Chrome Web Store
 cws-deploy: cws-upload cws-publish ## Upload and publish in one step
 	@echo "Extension deployed successfully!"
 
+.PHONY: cws-status
+cws-status: check-env ## Check Chrome Web Store extension status
+	@ACCESS_TOKEN=$$(curl -s -X POST https://oauth2.googleapis.com/token \
+		-d "client_id=$(CLIENT_ID)" \
+		-d "client_secret=$(CLIENT_SECRET)" \
+		-d "refresh_token=$(REFRESH_TOKEN)" \
+		-d "grant_type=refresh_token" | jq -r '.access_token') && \
+	echo "=== Extension Status ===" && \
+	curl -s -H "Authorization: Bearer $$ACCESS_TOKEN" \
+		"https://www.googleapis.com/chromewebstore/v1.1/items/$(EXTENSION_ID)?projection=DRAFT" | \
+		jq -r '"ID:           \(.id)\nPublished:    \(.crxVersion)\nDraft State:  \(.uploadState)\nErrors:       \(.itemError // "none")"'
+
 # Convenience aliases
 .PHONY: release
 release: cws-deploy ## Alias for cws-deploy
@@ -69,6 +81,9 @@ upload: cws-upload ## Alias for cws-upload
 
 .PHONY: publish
 publish: cws-publish ## Alias for cws-publish
+
+.PHONY: status
+status: cws-status ## Alias for cws-status
 
 # Development targets
 .PHONY: dev
