@@ -1,5 +1,5 @@
 {
-  "lastSequence": 11,
+  "lastSequence": 12,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
@@ -28,6 +28,10 @@
     {
       "branch": "fix/title-not-showing-in-custom-gpts",
       "adrs": ["011-structural-footer-detection.md"]
+    },
+    {
+      "branch": "feat/cws-publishing-automation",
+      "adrs": ["012-chrome-web-store-publishing-automation.md"]
     }
   ]
 }
