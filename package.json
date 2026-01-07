@@ -21,10 +21,12 @@
     "cws:console": "make cws-console",
     "cws:edit": "make cws-edit",
     "cws:listing": "make cws-listing",
+    "cws:rank": "npx tsx scripts/cws-rank.ts",
     "release": "npm run cws:deploy"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.28",
+    "tsx": "^4.19.0",
     "@playwright/test": "^1.57.0",
     "@types/chrome": "^0.0.280",
     "@vitest/coverage-v8": "^3.2.4",
