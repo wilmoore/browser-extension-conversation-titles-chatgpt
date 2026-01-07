@@ -104,6 +104,10 @@ ifndef EXTENSION_ID
 endif
 	$(OPEN_CMD) "https://chromewebstore.google.com/detail/$(EXTENSION_ID)"
 
+.PHONY: cws-rank
+cws-rank: ## Check search rankings for tracked keywords
+	npm run cws:rank
+
 # Convenience aliases
 .PHONY: release
 release: cws-deploy ## Alias for cws-deploy
@@ -125,6 +129,9 @@ edit: cws-edit ## Alias for cws-edit
 
 .PHONY: listing
 listing: cws-listing ## Alias for cws-listing
+
+.PHONY: rank
+rank: cws-rank ## Alias for cws-rank
 
 # Development targets
 .PHONY: dev

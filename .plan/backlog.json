@@ -1,6 +1,18 @@
 {
-  "lastSequence": 10,
+  "lastSequence": 11,
   "items": [
+    {
+      "id": "backlog-011",
+      "title": "CWS search metrics automation and store assets",
+      "description": "Build Playwright-based automation to track Chrome Web Store search rankings for key phrases (Conversation, Conversation Title, Conversation Titles for ChatGPT). Store history in JSONL format. Also improve store listing assets: AI-generated screenshot concepts and pixel-perfect Figma icon exports.",
+      "category": "feature",
+      "severity": "medium",
+      "fingerprint": "feature|011|cws-metrics-store-assets",
+      "source": "/pro:feature",
+      "sourceBranch": "feature/cws-metrics-and-store-assets",
+      "createdAt": "2026-01-05T20:00:00Z",
+      "status": "in-progress"
+    },
     {
       "id": "backlog-010",
       "title": "CWS command naming confusion",
