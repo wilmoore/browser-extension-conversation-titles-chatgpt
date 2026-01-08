@@ -6,10 +6,10 @@ A lightweight Chrome extension that restores missing context in the ChatGPT UI b
 
 - Always displays the current conversation title
 - Shows project name when conversation belongs to a project
-- Copy in multiple formats with modifier clicks:
-  - **Click**: Copy title only
+- Copy in multiple formats with modifier clicks (customizable in Options):
+  - **Click**: Copy as Markdown link
   - **Shift + Click**: Copy project name and title
-  - **Cmd/Ctrl + Click**: Copy as Markdown link
+  - **Cmd/Ctrl + Click**: Copy title only
   - **Cmd/Ctrl + Shift + Click**: Copy raw URL
 
 ## Installation

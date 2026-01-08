@@ -155,9 +155,9 @@
 
     <div class="option-row">
       <div class="option-label">
-        <span class="key-combo" data-i18n="shortcutClick">Click</span>
+        <span class="key-combo" id="click-label" data-i18n="shortcutClick">Click</span>
       </div>
-      <select id="click">
+      <select id="click" aria-labelledby="click-label">
         <option value="MARKDOWN" data-i18n="formatMarkdown">Markdown link</option>
         <option value="TITLE" data-i18n="formatTitle">Title only</option>
         <option value="FULL_CONTEXT" data-i18n="formatFull">Full context</option>
@@ -169,7 +169,7 @@
       <div class="option-label">
         <span class="key-combo" id="shift-label" data-i18n="shortcutShift">Shift</span>
       </div>
-      <select id="shiftClick">
+      <select id="shiftClick" aria-labelledby="shift-label">
         <option value="FULL_CONTEXT" data-i18n="formatFull">Full context</option>
         <option value="MARKDOWN" data-i18n="formatMarkdown">Markdown link</option>
         <option value="TITLE" data-i18n="formatTitle">Title only</option>
@@ -181,7 +181,7 @@
       <div class="option-label">
         <span class="key-combo" id="mod-label" data-i18n-key="shortcutCmd">Cmd</span>
       </div>
-      <select id="modClick">
+      <select id="modClick" aria-labelledby="mod-label">
         <option value="TITLE" data-i18n="formatTitle">Title only</option>
         <option value="MARKDOWN" data-i18n="formatMarkdown">Markdown link</option>
         <option value="FULL_CONTEXT" data-i18n="formatFull">Full context</option>
@@ -193,7 +193,7 @@
       <div class="option-label">
         <span class="key-combo" id="mod-shift-label" data-i18n-key="shortcutCmdShift">Cmd+Shift</span>
       </div>
-      <select id="modShiftClick">
+      <select id="modShiftClick" aria-labelledby="mod-shift-label">
         <option value="URL" data-i18n="formatUrl">URL only</option>
         <option value="MARKDOWN" data-i18n="formatMarkdown">Markdown link</option>
         <option value="TITLE" data-i18n="formatTitle">Title only</option>
@@ -206,10 +206,10 @@
     <h2 data-i18n="optionsFeedback">Feedback</h2>
 
     <div class="toggle-row">
-      <span class="toggle-label" data-i18n="optionsPlaySound">Play sound on copy</span>
+      <span class="toggle-label" id="audioFeedback-label" data-i18n="optionsPlaySound">Play sound on copy</span>
       <label class="toggle">
-        <input type="checkbox" id="audioFeedback">
-        <span class="toggle-slider"></span>
+        <input type="checkbox" id="audioFeedback" aria-labelledby="audioFeedback-label">
+        <span class="toggle-slider" aria-hidden="true"></span>
       </label>
     </div>
   </div>

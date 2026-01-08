@@ -11,7 +11,8 @@
       "source": "/pro:feature",
       "sourceBranch": "feature/cws-metrics-and-store-assets",
       "createdAt": "2026-01-05T20:00:00Z",
-      "status": "in-progress"
+      "status": "completed",
+      "resolvedAt": "2026-01-07T22:45:35Z"
     },
     {
       "id": "backlog-010",
@@ -91,9 +92,11 @@
       "category": "tests",
       "priority": "medium",
       "source": "/pro:audit",
-      "sourceBranch": "main",
+      "sourceBranch": "chore/backlog-cleanup",
       "fingerprint": "src/options/options.ts:1-139|missing-tests",
-      "createdAt": "2025-12-26T04:20:51Z"
+      "createdAt": "2025-12-26T04:20:51Z",
+      "status": "completed",
+      "resolvedAt": "2026-01-08T05:41:00Z"
     },
     {
       "id": "backlog-002",
@@ -102,9 +105,11 @@
       "category": "tests",
       "priority": "medium",
       "source": "/pro:audit",
-      "sourceBranch": "main",
+      "sourceBranch": "chore/backlog-cleanup",
       "fingerprint": "src/storage/preferences.ts:1-56|missing-tests",
-      "createdAt": "2025-12-26T04:20:51Z"
+      "createdAt": "2025-12-26T04:20:51Z",
+      "status": "completed",
+      "resolvedAt": "2026-01-08T05:41:00Z"
     },
     {
       "id": "backlog-003",
@@ -113,9 +118,11 @@
       "category": "i18n",
       "priority": "medium",
       "source": "/pro:audit",
-      "sourceBranch": "main",
+      "sourceBranch": "chore/backlog-cleanup",
       "fingerprint": "src/options/options.html:160-201|missing-aria",
-      "createdAt": "2025-12-26T04:20:51Z"
+      "createdAt": "2025-12-26T04:20:51Z",
+      "status": "completed",
+      "resolvedAt": "2026-01-08T05:41:00Z"
     },
     {
       "id": "backlog-004",
@@ -124,9 +131,11 @@
       "category": "debt",
       "priority": "low",
       "source": "/pro:audit",
-      "sourceBranch": "main",
+      "sourceBranch": "chore/backlog-cleanup",
       "fingerprint": "README.md:10-14|outdated-docs",
-      "createdAt": "2025-12-26T04:20:51Z"
+      "createdAt": "2025-12-26T04:20:51Z",
+      "status": "completed",
+      "resolvedAt": "2026-01-08T05:41:00Z"
     }
   ]
 }
