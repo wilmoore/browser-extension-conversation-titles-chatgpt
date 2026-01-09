@@ -1,6 +1,42 @@
 {
-  "lastSequence": 11,
+  "lastSequence": 14,
   "items": [
+    {
+      "id": "backlog-012",
+      "title": "CWS Enhanced Safe Browsing trust warning",
+      "description": "Chrome shows 'Proceed with caution - This extension is not trusted by Enhanced Safe Browsing' during install. Not a code bug - distribution trust issue. DONE: Added hosted privacy policy (docs/privacy.html), landing page (docs/index.html), README install guidance. READY FOR PR.",
+      "category": "chore",
+      "severity": "high",
+      "fingerprint": "chore|012|cws-trust-optimization",
+      "source": "/pro:bug",
+      "sourceBranch": "chore/cws-trust-optimization",
+      "createdAt": "2026-01-08T19:00:00Z",
+      "status": "in-progress"
+    },
+    {
+      "id": "backlog-013",
+      "title": "Enable GitHub Pages for privacy policy hosting",
+      "description": "After merging chore/cws-trust-optimization: Go to repo Settings > Pages, set Source to 'main' branch '/docs' folder. URL will be https://wilmoore.github.io/browser-extension-conversation-titles-chatgpt/privacy.html",
+      "category": "chore",
+      "severity": "high",
+      "fingerprint": "chore|013|enable-github-pages",
+      "source": "/pro:bug",
+      "sourceBranch": "chore/cws-trust-optimization",
+      "createdAt": "2026-01-09T00:00:00Z",
+      "status": "pending"
+    },
+    {
+      "id": "backlog-014",
+      "title": "Update CWS listing with privacy policy URL",
+      "description": "After GitHub Pages is live: Go to CWS Store Listing Editor, set Privacy Policy URL to https://wilmoore.github.io/browser-extension-conversation-titles-chatgpt/privacy.html, save and submit for review.",
+      "category": "chore",
+      "severity": "high",
+      "fingerprint": "chore|014|cws-privacy-url",
+      "source": "/pro:bug",
+      "sourceBranch": "chore/cws-trust-optimization",
+      "createdAt": "2026-01-09T00:00:00Z",
+      "status": "pending"
+    },
     {
       "id": "backlog-011",
       "title": "CWS search metrics automation and store assets",
