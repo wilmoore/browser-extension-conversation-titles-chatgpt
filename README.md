@@ -35,6 +35,8 @@ A lightweight Chrome extension that restores missing context in the ChatGPT UI b
 
 [Install from Chrome Web Store](https://chrome.google.com/webstore/detail/conversation-titles-for-chatgpt/kgjldbijkcbbjbnfdaebkfbpgdoogfjo)
 
+> **Note:** Chrome may display a "Proceed with caution" warning for newer extensions with clipboard permissions. This is standard for new extensions and does not indicate a security issue. The extension is [open source](https://github.com/wilmoore/browser-extension-conversation-titles-chatgpt), collects no data, and makes no network requests. See our [Privacy Policy](https://wilmoore.github.io/browser-extension-conversation-titles-chatgpt/privacy.html).
+
 ## Usage
 
 Once installed, the extension automatically displays the conversation title:
@@ -84,6 +86,8 @@ This extension:
 - Does not make any network requests
 - Only requires clipboard write permission for copy functionality
 - Operates entirely client-side
+
+See the full [Privacy Policy](https://wilmoore.github.io/browser-extension-conversation-titles-chatgpt/privacy.html).
 
 ## License
 
