@@ -108,9 +108,33 @@ endif
 cws-rank: ## Check search rankings for tracked keywords
 	npm run cws:rank
 
+.PHONY: privacy
+privacy: ## Open hosted privacy policy page
+	$(OPEN_CMD) "https://wilmoore.github.io/browser-extension-conversation-titles-chatgpt/privacy.html"
+
+.PHONY: sync-version
+sync-version: ## Sync manifest.json version from package.json
+	npm run sync-version
+
+# Automated release (bump, commit, tag, push, opens Actions)
+.PHONY: release-patch
+release-patch: ## Release patch version (1.0.x)
+	bash scripts/release.sh patch
+
+.PHONY: release-minor
+release-minor: ## Release minor version (1.x.0)
+	bash scripts/release.sh minor
+
+.PHONY: release-major
+release-major: ## Release major version (x.0.0)
+	bash scripts/release.sh major
+
 # Convenience aliases
 .PHONY: release
-release: cws-deploy ## Alias for cws-deploy
+release: release-patch ## Release patch version (default)
+
+.PHONY: release-local
+release-local: cws-deploy ## Manual local release (requires .env)
 
 .PHONY: upload
 upload: cws-upload ## Alias for cws-upload

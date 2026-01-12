@@ -1,6 +1,18 @@
 {
-  "lastSequence": 14,
+  "lastSequence": 15,
   "items": [
+    {
+      "id": "backlog-015",
+      "title": "Release docs, version sync, and GitHub Pages setup",
+      "description": "Enable GitHub Pages for privacy policy hosting, add open:privacy script, sync package.json/manifest.json versions, document release process in RELEASING.md, and clarify automated vs manual release steps.",
+      "category": "chore",
+      "severity": "medium",
+      "fingerprint": "chore|015|release-docs-and-tooling",
+      "source": "/pro:chore",
+      "sourceBranch": "chore/release-docs-and-tooling",
+      "createdAt": "2026-01-11T00:00:00Z",
+      "status": "in-progress"
+    },
     {
       "id": "backlog-012",
       "title": "CWS Enhanced Safe Browsing trust warning",
@@ -23,7 +35,8 @@
       "source": "/pro:bug",
       "sourceBranch": "chore/cws-trust-optimization",
       "createdAt": "2026-01-09T00:00:00Z",
-      "status": "pending"
+      "status": "completed",
+      "resolvedAt": "2026-01-11T00:00:00Z"
     },
     {
       "id": "backlog-014",
