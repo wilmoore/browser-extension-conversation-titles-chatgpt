@@ -65,7 +65,7 @@ npm run build --silent
 
 # Commit
 echo -e "${BLUE}Committing version bump...${NC}"
-git add package.json public/manifest.json
+git add package.json package-lock.json public/manifest.json
 git commit -m "chore: release v$NEW_VERSION"
 
 # Create tag
