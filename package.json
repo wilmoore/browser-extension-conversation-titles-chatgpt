@@ -27,7 +27,8 @@
     "release:major": "bash scripts/release.sh major",
     "release:local": "npm run cws:deploy",
     "open:privacy": "open https://wilmoore.github.io/browser-extension-conversation-titles-chatgpt/privacy.html",
-    "sync-version": "node -e \"const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));const mPath='public/manifest.json';const m=JSON.parse(fs.readFileSync(mPath));m.version=pkg.version;fs.writeFileSync(mPath,JSON.stringify(m,null,2)+'\\n');console.log('Synced manifest.json to v'+pkg.version)\""
+    "sync-version": "node -e \"const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));const mPath='public/manifest.json';const m=JSON.parse(fs.readFileSync(mPath));m.version=pkg.version;fs.writeFileSync(mPath,JSON.stringify(m,null,2)+'\\n');console.log('Synced manifest.json to v'+pkg.version)\"",
+    "manifest": "cat public/manifest.json"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.28",

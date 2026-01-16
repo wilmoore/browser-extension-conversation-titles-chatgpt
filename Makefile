@@ -183,6 +183,10 @@ clean: ## Clean build artifacts
 version: ## Show current version
 	@node -p "require('./package.json').version"
 
+.PHONY: manifest
+manifest: ## Print extension manifest (pipe to pbcopy to copy)
+	@cat public/manifest.json
+
 .PHONY: bump-patch
 bump-patch: ## Bump patch version (1.0.x)
 	npm version patch --no-git-tag-version
