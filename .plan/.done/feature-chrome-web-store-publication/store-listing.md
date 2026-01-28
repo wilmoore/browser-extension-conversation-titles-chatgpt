@@ -68,7 +68,6 @@ HOW TO USE
 
 SUPPORTED SITES
 • chatgpt.com
-• chat.openai.com
 
 Questions or feedback? Contact support@savvyai.dev
 

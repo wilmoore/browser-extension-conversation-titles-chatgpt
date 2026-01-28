@@ -1,5 +1,5 @@
 {
-  "lastSequence": 13,
+  "lastSequence": 14,
   "entries": [
     {
       "branch": "feature/conversation-titles-display-copy",
@@ -36,6 +36,10 @@
     {
       "branch": "feature/cws-metrics-and-store-assets",
       "adrs": ["013-jsonl-for-metrics-history.md"]
+    },
+    {
+      "branch": "feat/chrome-trust-reputation-hardening",
+      "adrs": ["014-local-only-privacy-verification.md"]
     }
   ]
 }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Background circle with ChatGPT-inspired teal -->
+  <circle cx="64" cy="64" r="60" fill="#10a37f"/>
+
+  <!-- Speech bubble shape -->
+  <path d="M32 38 h64 a12 12 0 0 1 12 12 v36 a12 12 0 0 1 -12 12 h-40 l-16 14 v-14 h-8 a12 12 0 0 1 -12 -12 v-36 a12 12 0 0 1 12 -12 z" fill="white"/>
+
+  <!-- Letter T for Title -->
+  <text x="64" y="82" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="48" font-weight="700" text-anchor="middle" fill="#10a37f">T</text>
+</svg>
