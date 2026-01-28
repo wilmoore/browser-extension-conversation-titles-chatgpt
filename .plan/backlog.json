@@ -11,7 +11,9 @@
       "source": "/pro:feature",
       "sourceBranch": "feat/chrome-trust-reputation-hardening",
       "createdAt": "2026-01-16T00:00:00Z",
-      "status": "in-progress"
+      "status": "completed",
+      "resolvedAt": "2026-01-27T00:00:00Z",
+      "pr": "https://github.com/wilmoore/browser-extension-conversation-titles-chatgpt/pull/22"
     },
     {
       "id": "backlog-015",
