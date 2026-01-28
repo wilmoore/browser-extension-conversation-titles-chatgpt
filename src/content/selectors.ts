@@ -73,11 +73,10 @@ export const DISCLAIMER_PATTERNS = [
  * Regex pattern for extracting conversation ID from URL
  * Matches:
  * - https://chatgpt.com/c/[id]
- * - https://chat.openai.com/c/[id]
  * - https://chatgpt.com/g/[project-id]/c/[id]
  */
 export const CONVERSATION_URL_REGEX =
-  /^https:\/\/(chatgpt\.com|chat\.openai\.com)(\/g\/[^/]+)?\/c\/([a-zA-Z0-9-]+)/;
+  /^https:\/\/chatgpt\.com(\/g\/[^/]+)?\/c\/([a-zA-Z0-9-]+)/;
 
 /**
  * Extension element identifiers

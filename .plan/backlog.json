@@ -1,6 +1,18 @@
 {
-  "lastSequence": 15,
+  "lastSequence": 16,
   "items": [
+    {
+      "id": "backlog-016",
+      "title": "Chrome Trust & Reputation Hardening",
+      "description": "Patch-level release focused on trust stabilization. Removes legacy chat.openai.com host permission (redirects to chatgpt.com anyway), verifies local-only privacy claims, updates store listing to match code behavior.",
+      "category": "feature",
+      "severity": "medium",
+      "fingerprint": "feature|016|chrome-trust-hardening",
+      "source": "/pro:feature",
+      "sourceBranch": "feat/chrome-trust-reputation-hardening",
+      "createdAt": "2026-01-16T00:00:00Z",
+      "status": "in-progress"
+    },
     {
       "id": "backlog-015",
       "title": "Release docs, version sync, and GitHub Pages setup",
